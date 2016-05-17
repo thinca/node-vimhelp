@@ -6,6 +6,10 @@
   "bugs": {
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  },
   "engines": {
     "node": ">=6.0.0"
   },
@@ -22,6 +26,6 @@
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   }
 }
