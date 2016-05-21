@@ -13,6 +13,9 @@
   "engines": {
     "node": ">=6.0.0"
   },
+  "files": [
+    "lib"
+  ],
   "homepage": "https://github.com/thinca/node-vimhelp",
   "keywords": [
     "document",
