@@ -6,9 +6,14 @@
   "bugs": {
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
+  "dependencies": {
+    "is-there": "^4.3.2",
+    "rmdir": "^1.2.0"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "temp": "^0.8.3"
   },
   "engines": {
     "node": ">=6.0.0"
