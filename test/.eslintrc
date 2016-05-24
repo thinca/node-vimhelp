@@ -1,0 +1,5 @@
+---
+env:
+  mocha: true
+
+# vim: set ft=yaml:
