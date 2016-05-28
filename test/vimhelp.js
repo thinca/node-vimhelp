@@ -23,12 +23,21 @@ describe("vimhelp", () => {
       it("returns Promise object", () => {
         expect(vimhelp.search("help")).to.be.instanceof(Promise);
       });
+
       it("searches help from Vim's document", (done) => {
         vimhelp.search("help").then((helpText) => {
           expect(helpText).to.include("*help*");
           done();
         }).catch(done);
       });
+
+      it("can not execute the optional command", (done) => {
+        vimhelp.search("help\nenew\nput ='abc'\np\nqall!").then((helpText) => {
+          expect(helpText).to.include("*help*");
+          done();
+        }).catch(done);
+      });
+
       context("when the help does not exist", () => {
         it("throws error", (done) => {
           vimhelp.search("never-never-exist-help").then((helpText) => {
@@ -39,6 +48,7 @@ describe("vimhelp", () => {
           }).catch(done);
         });
       });
+
       context("when rtp provider is set", () => {
         hijackExecVim();
         beforeEach(() => {
@@ -49,6 +59,7 @@ describe("vimhelp", () => {
           expect(commands).to.include("set runtimepath+=/path/to/plugin");
         });
       });
+
       context("when helplang is set", () => {
         hijackExecVim();
         beforeEach(() => {
