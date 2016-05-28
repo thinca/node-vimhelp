@@ -50,6 +50,14 @@ describe("vimhelp", () => {
       });
     });
 
+    describe(".rtpProvider", () => {
+      it("returns the rtp provider", () => {
+        let pre = preManager;
+        let rtp = pre.rtpProvider;
+        expect(rtp()).to.eql([pathJoin(pre.basePath, "github.com__thinca__vim-themis")]);
+      });
+    });
+
     describe(".install()", () => {
       context("with exist plugin", () => {
         let manager, promise;
