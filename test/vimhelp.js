@@ -45,6 +45,22 @@ describe("vimhelp", () => {
           expect(commands).to.include("set runtimepath+=/path/to/plugin");
         });
       });
+      context("when helplang is set", () => {
+        let revert;
+        before(() => {
+          revert = VIMHELP.__set__("execVim", (vimBin, commands) => commands);
+        });
+        after(() => {
+          revert();
+        });
+        beforeEach(() => {
+          vimhelp.helplang = ["ja", "en"];
+        });
+        it("sets 'helplang' options", () => {
+          let commands = vimhelp.search("word");
+          expect(commands).to.include("set helplang=ja,en");
+        });
+      });
     });
 
     describe(".setRTPProvider()", () => {
