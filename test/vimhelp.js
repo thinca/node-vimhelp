@@ -10,6 +10,16 @@ describe("vimhelp", () => {
       vimhelp = new VimHelp();
     });
     describe(".search()", () => {
+      const hijackExecVim = () => {
+        let revert;
+        before(() => {
+          revert = VIMHELP.__set__("execVim", (vimBin, commands) => commands);
+        });
+        after(() => {
+          revert();
+        });
+      };
+
       it("returns Promise object", () => {
         expect(vimhelp.search("help")).to.be.instanceof(Promise);
       });
@@ -30,13 +40,7 @@ describe("vimhelp", () => {
         });
       });
       context("when rtp provider is set", () => {
-        let revert;
-        before(() => {
-          revert = VIMHELP.__set__("execVim", (vimBin, commands) => commands);
-        });
-        after(() => {
-          revert();
-        });
+        hijackExecVim();
         beforeEach(() => {
           vimhelp.setRTPProvider(() => ["/path/to/plugin"]);
         });
@@ -46,13 +50,7 @@ describe("vimhelp", () => {
         });
       });
       context("when helplang is set", () => {
-        let revert;
-        before(() => {
-          revert = VIMHELP.__set__("execVim", (vimBin, commands) => commands);
-        });
-        after(() => {
-          revert();
-        });
+        hijackExecVim();
         beforeEach(() => {
           vimhelp.helplang = ["ja", "en"];
         });
