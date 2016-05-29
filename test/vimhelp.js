@@ -24,11 +24,51 @@ describe("vimhelp", () => {
         expect(vimhelp.search("help")).to.be.instanceof(Promise);
       });
 
-      it("searches help from Vim's document", (done) => {
-        vimhelp.search("help").then((helpText) => {
-          expect(helpText).to.include("*help*");
-          done();
-        }).catch(done);
+      describe("the result", () => {
+        // XXX: These test may fail when Vim's help will be updated.
+        it("is a text from Vim's help", (done) => {
+          vimhelp.search("help").then((helpText) => {
+            expect(helpText).to.include("*help*");
+            done();
+          }).catch(done);
+        });
+
+        it("keeps the whitespaces of head", (done) => {
+          vimhelp.search("G").then((helpText) => {
+            expect(helpText).to.match(/^\s/);
+            done();
+          }).catch(done);
+        });
+
+        it("doesn't have the blank chars in tail", (done) => {
+          vimhelp.search("G").then((helpText) => {
+            expect(helpText).to.not.match(/\n$/);
+            done();
+          }).catch(done);
+        });
+
+        it("contains a range of before of a next tag from a tag", (done) => {
+          vimhelp.search("CTRL-J").then((helpText) => {
+            let lines = helpText.split("\n");
+            expect(lines).to.have.lengthOf(5);
+            expect(lines[0]).to.include("*j*");
+            done();
+          }).catch(done);
+        });
+
+        it("can treat a tag at the head of file", (done) => {
+          vimhelp.search("helphelp.txt").then((helpText) => {
+            expect(helpText).to.include("*helphelp.txt*");
+            done();
+          }).catch(done);
+        });
+
+        it("does not contain separator", (done) => {
+          vimhelp.search("o_CTRL-V").then((helpText) => {
+            expect(helpText).to.not.include("===");
+            done();
+          }).catch(done);
+        });
       });
 
       it("can not execute the optional command", (done) => {
