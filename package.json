@@ -12,7 +12,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "coveralls": "^2.11.9",
     "eslint": "^2.10.2",
+    "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
     "rewire": "^2.5.1",
     "temp": "^0.8.3"
@@ -37,6 +39,9 @@
   },
   "scripts": {
     "lint": "eslint lib test",
-    "test": "mocha"
+    "test": "mocha",
+    "coveralls": "coveralls < coverage/lcov.info",
+    "coverage": "istanbul cover _mocha --report lcovonly",
+    "clean": "rm -fr coverage"
   }
 }
