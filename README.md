@@ -1,6 +1,10 @@
 node-vimhelp
 ============
 
+[![NPM Version][npm-image]][npm-url]
+[![Node.js Version][node-version-image]][node-version-url]
+[![Linux Build][travis-image]][travis-url]
+
 Show the help of [Vim](https://github.com/vim/vim).
 
 This package uses Vim in background.  So you need Vim in your environment.
@@ -202,3 +206,11 @@ Author
 ------
 
 thinca <thinca+npm@gmail.com>
+
+
+[npm-image]: https://img.shields.io/npm/v/vimhelp.svg
+[npm-url]: https://npmjs.org/package/vimhelp
+[node-version-image]: https://img.shields.io/node/v/vimhelp.svg
+[node-version-url]: https://nodejs.org/en/download/
+[travis-image]: https://img.shields.io/travis/thinca/node-vimhelp/master.svg?label=linux
+[travis-url]: https://travis-ci.org/thinca/node-vimhelp
