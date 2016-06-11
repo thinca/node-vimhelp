@@ -20,3 +20,7 @@ addons:
 before_script:
   - vim --version
   - git --version
+
+script:
+  - npm run lint
+  - npm test
