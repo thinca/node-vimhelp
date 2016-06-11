@@ -137,7 +137,7 @@ describe("vimhelp", () => {
       });
     });
 
-    const behavesUpdate = () => {
+    const behavesUpdate = (method) => {
       let pluginPath, tags;
 
       beforeEach(() => {
@@ -148,7 +148,7 @@ describe("vimhelp", () => {
       context("with no updates", () => {
         let promise;
         before(() => {
-          promise = preManager.updatePlugin(plugin);
+          promise = preManager[method](plugin);
         });
         it("does nothing as result", (done) => {
           promise.then(() => {
@@ -174,7 +174,7 @@ describe("vimhelp", () => {
 
       context("with no exist path", () => {
         it("is fail", (done) => {
-          preManager.updatePlugin("not-installed-plugin").then(done).catch((error) => {
+          preManager[method]("not-installed-plugin").then(done).catch((error) => {
             expect(error).to.be.an("error");
             done();
           });
@@ -183,11 +183,11 @@ describe("vimhelp", () => {
     };
 
     describe(".update()", () => {
-      behavesUpdate();
+      behavesUpdate("update");
     });
 
     describe(".updatePlugin()", () => {
-      behavesUpdate();
+      behavesUpdate("updatePlugin");
     });
 
     describe(".updateAll()", () => {
