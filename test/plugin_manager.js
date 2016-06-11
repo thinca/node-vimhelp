@@ -5,7 +5,7 @@ const temp = require("temp").track();
 const isThere = require("is-there");
 const {PluginManager} = require("../lib/vimhelp");
 
-process.on("unhandledRejection", (reason, p) => {
+process.on("unhandledRejection", (reason) => {
   console.log(reason);
 });
 

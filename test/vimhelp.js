@@ -3,7 +3,7 @@ const rewire = require("rewire");
 const VIMHELP = rewire("../lib/vimhelp");
 const {VimHelp} = VIMHELP;
 
-process.on("unhandledRejection", (reason, p) => {
+process.on("unhandledRejection", (reason) => {
   console.log(reason);
 });
 
