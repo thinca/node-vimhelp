@@ -5,6 +5,10 @@ const temp = require("temp").track();
 const isThere = require("is-there");
 const {PluginManager} = require("../lib/vimhelp");
 
+process.on("unhandledRejection", (reason, p) => {
+  console.log(reason);
+});
+
 describe("vimhelp", () => {
   describe("PluginManager", function() {
     this.timeout(10000);  // for git clone
@@ -14,7 +18,7 @@ describe("vimhelp", () => {
     let preManager;
     before((done) => {
       preManager = new PluginManager(temp.mkdirSync("vimhelp-test"));
-      preManager.install(plugin).then(() => done());
+      preManager.install(plugin).then(() => done()).catch(done);
     });
 
     const unlinkTags = (pluginPath) => {
