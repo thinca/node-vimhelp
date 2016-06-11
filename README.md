@@ -12,6 +12,12 @@ Requirements
   - This is written in ES2015.
 - Vim
   - Version 7.4 or later is recommended.
+- Git
+  - To use PluginManager.
+  - Git 2.3 or above is recommended.
+    - Because `GIT_TERMINAL_PROMPT` environment variable is available.
+      This script may freeze when the interactive prompt appears with old Git.
+      For example, when you specify the non-exist repository.
 
 Installation
 ------------
