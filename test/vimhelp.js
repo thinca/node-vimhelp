@@ -53,7 +53,7 @@ describe("vimhelp", () => {
 
         it("contains a range of before of a next tag from a tag", (done) => {
           vimhelp.search("CTRL-J").then((helpText) => {
-            let lines = helpText.split("\n");
+            const lines = helpText.split("\n");
             expect(lines).to.have.lengthOf(5);
             expect(lines[0]).to.include("*j*");
             done();
@@ -99,7 +99,7 @@ describe("vimhelp", () => {
           vimhelp.setRTPProvider(() => ["/path/to/plugin"]);
         });
         it("is set rtp from provider", () => {
-          let commands = vimhelp.search("word");
+          const commands = vimhelp.search("word");
           expect(commands).to.include("set runtimepath+=/path/to/plugin");
         });
       });
@@ -110,7 +110,7 @@ describe("vimhelp", () => {
           vimhelp.helplang = ["ja", "en"];
         });
         it("sets 'helplang' options", () => {
-          let commands = vimhelp.search("word");
+          const commands = vimhelp.search("word");
           expect(commands).to.include("set helplang=ja,en");
         });
       });

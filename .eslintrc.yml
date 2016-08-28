@@ -7,3 +7,5 @@ rules:
   semi:
     - error
     - always
+  prefer-const:
+    - error

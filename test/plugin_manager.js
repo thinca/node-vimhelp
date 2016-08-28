@@ -22,7 +22,7 @@ describe("vimhelp", () => {
     });
 
     const unlinkTags = (pluginPath) => {
-      let tags = pathJoin(pluginPath, "doc", "tags");
+      const tags = pathJoin(pluginPath, "doc", "tags");
       if (isThere(tags)) {
         fs.unlinkSync(tags);
       }
@@ -35,29 +35,29 @@ describe("vimhelp", () => {
 
     describe(".dirNames", () => {
       it("returns array of dir names", () => {
-        let pre = preManager;
+        const pre = preManager;
         expect(pre.dirNames).to.eql(["github.com__thinca__vim-themis"]);
       });
     });
 
     describe(".pluginNames", () => {
       it("returns array of plugin names", () => {
-        let pre = preManager;
+        const pre = preManager;
         expect(pre.pluginNames).to.eql([plugin]);
       });
     });
 
     describe(".runtimepaths", () => {
       it("returns array of runtimepath", () => {
-        let pre = preManager;
+        const pre = preManager;
         expect(pre.runtimepaths).to.eql([pathJoin(pre.basePath, "github.com__thinca__vim-themis")]);
       });
     });
 
     describe(".rtpProvider", () => {
       it("returns the rtp provider", () => {
-        let pre = preManager;
-        let rtp = pre.rtpProvider;
+        const pre = preManager;
+        const rtp = pre.rtpProvider;
         expect(rtp()).to.eql([pathJoin(pre.basePath, "github.com__thinca__vim-themis")]);
       });
     });
@@ -70,10 +70,10 @@ describe("vimhelp", () => {
           promise = manager.install(plugin);
         });
         it("installs a plugin", (done) => {
-          let path = manager.nameToPath(plugin);
+          const path = manager.nameToPath(plugin);
           promise.then(() => {
             expect(isThere(path)).to.be.ok;
-            let tags = pathJoin(path, "doc", "tags");
+            const tags = pathJoin(path, "doc", "tags");
             expect(isThere(tags)).to.be.ok;
             done();
           }).catch(done);
@@ -113,8 +113,8 @@ describe("vimhelp", () => {
 
     describe(".uninstall()", () => {
       it("uninstalls a plugin", (done) => {
-        let manager = newManager();
-        let path = manager.nameToPath(plugin);
+        const manager = newManager();
+        const path = manager.nameToPath(plugin);
         manager.install(plugin).then((version) => {
           expect(isThere(path)).to.be.ok;
           expect(version).to.match(/^[0-9a-f]{40}$/);
@@ -127,7 +127,7 @@ describe("vimhelp", () => {
 
       context("with not installed plugin", () => {
         it("is fail", (done) => {
-          let manager = newManager();
+          const manager = newManager();
           manager.uninstall("thinca/not-installed-plugin").then(done).catch((error) => {
             expect(error).to.be.an("error");
             expect(error.message).to.contain("Plugin is not installed:");
@@ -213,7 +213,7 @@ describe("vimhelp", () => {
           it("returns updateInfos", (done) => {
             promise.then((updateInfos) => {
               expect(updateInfos).to.have.lengthOf(1);
-              let [info] = updateInfos;
+              const [info] = updateInfos;
               expect(info.pluginName).to.eql(plugin);
               expect(info.pluginPath).to.eql(pluginPath);
               expect(info.beforeVersion).to.eql(info.afterVersion);
@@ -247,7 +247,7 @@ describe("vimhelp", () => {
           it("returns updateInfos", (done) => {
             promise.then((updateInfos) => {
               expect(updateInfos).to.have.lengthOf(plugins.length);
-              let [info] = updateInfos;
+              const [info] = updateInfos;
               expect(info.pluginName).to.eql(plugin);
               expect(info.pluginPath).to.eql(pluginPath);
               expect(info.beforeVersion).to.eql(info.afterVersion);
@@ -277,8 +277,8 @@ describe("vimhelp", () => {
 
     describe(".updateTags()", () => {
       it("updates helptags", (done) => {
-        let pluginPath = preManager.nameToPath(plugin);
-        let tags = unlinkTags(pluginPath);
+        const pluginPath = preManager.nameToPath(plugin);
+        const tags = unlinkTags(pluginPath);
         expect(isThere(tags)).to.be.false;
         preManager.updateTags([pluginPath]).then((paths) => {
           expect(paths).to.be.an("array");
@@ -311,12 +311,12 @@ describe("vimhelp", () => {
     });
 
     describe(".repositoryToDirname()", () => {
-      let expectValue = "github.com__user__repos";
+      const expectValue = "github.com__user__repos";
       let repos;
-      let sample = () => {
+      const sample = () => {
         expect(preManager.repositoryToDirname(repos)).to.eql(expectValue);
       };
-      let testDotGitCase = () => {
+      const testDotGitCase = () => {
         context("when repository has .git suffix", () => {
           beforeEach(() => { repos += ".git"; });
           it("is removed", sample);
@@ -344,7 +344,7 @@ describe("vimhelp", () => {
 
     describe(".nameToPath()", () => {
       it("converts plugin name to path", () => {
-        let pre = preManager;
+        const pre = preManager;
         expect(pre.nameToPath("foo")).to.eql(pathJoin(pre.basePath, "github.com__vim-scripts__foo"));
       });
     });
