@@ -75,9 +75,18 @@ describe("vimhelp", () => {
         });
       });
 
-      it("can not execute the optional command", (done) => {
+      it("removes extra commands", (done) => {
         vimhelp.search("help\nenew\nput ='abc'\np\nqall!").then((helpText) => {
           expect(helpText).to.include("*help*");
+          done();
+        }).catch(done);
+      });
+      it("can not execute extra commands by |", (done) => {
+        vimhelp.search("help|enew").then((helpText) => {
+          done(helpText);
+        }).catch((error) => {
+          expect(error).to.have.property("errorText")
+            .that.to.match(/^E149:.*helpbarenew/);
           done();
         }).catch(done);
       });
