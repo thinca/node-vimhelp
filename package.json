@@ -38,10 +38,10 @@
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "lint": "eslint lib test",
-    "test": "mocha",
-    "coveralls": "coveralls < coverage/lcov.info",
+    "clean": "rm -fr coverage",
     "coverage": "istanbul cover _mocha --report lcovonly",
-    "clean": "rm -fr coverage"
+    "coveralls": "coveralls < coverage/lcov.info",
+    "lint": "eslint lib test",
+    "test": "mocha"
   }
 }
