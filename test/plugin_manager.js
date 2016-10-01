@@ -98,12 +98,8 @@ describe("vimhelp", () => {
       });
 
       context("with non-exist plugin", () => {
-        let manager;
-        before(() => {
-          manager = newManager();
-        });
         it("is fail", (done) => {
-          manager.install("thinca/non-exist-plugin").then(done).catch((error) => {
+          preManager.install("thinca/non-exist-plugin").then(done).catch((error) => {
             expect(error).to.have.property("exitCode").and.not.equal(0);
             done();
           }).catch(done);
@@ -127,8 +123,7 @@ describe("vimhelp", () => {
 
       context("with not installed plugin", () => {
         it("is fail", (done) => {
-          const manager = newManager();
-          manager.uninstall("thinca/not-installed-plugin").then(done).catch((error) => {
+          preManager.uninstall("thinca/not-installed-plugin").then(done).catch((error) => {
             expect(error).to.be.an("error");
             expect(error.message).to.contain("Plugin is not installed:");
             done();
