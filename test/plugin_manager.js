@@ -1,6 +1,7 @@
 const {expect} = require("chai");
 const fs = require("fs");
 const {join: pathJoin} = require("path");
+const {execFileSync} = require("child_process");
 const temp = require("temp").track();
 const isThere = require("is-there");
 const {PluginManager} = require("../lib/vimhelp");
@@ -13,7 +14,22 @@ describe("vimhelp", () => {
   describe("PluginManager", function() {
     this.timeout(10000);  // for git clone
 
-    const plugin = "thinca/vim-themis";
+    const createDummyPlugin = () => {
+      const repoDir = temp.mkdirSync("vimhelp-test-dummy-plugin-repo");
+      execFileSync("git", ["init", "--bare", repoDir], {stdio: "ignore"});
+      const workDir = temp.mkdirSync("vimhelp-test-dummy-plugin-work");
+      execFileSync("git", ["clone", repoDir, workDir], {stdio: "ignore"});
+      fs.mkdirSync(pathJoin(workDir, "doc"));
+      fs.writeFileSync(pathJoin(workDir, "doc", "hello.txt"), "*hello*");
+      execFileSync("git", ["add", "."], {cwd: workDir, stdio: "ignore"});
+      execFileSync("git", ["config", "user.email", "thinca+travis@gmail.com"], {cwd: workDir, stdio: "ignore"});
+      execFileSync("git", ["config", "user.name", "thinca"], {cwd: workDir, stdio: "ignore"});
+      execFileSync("git", ["commit", "--message", "hello"], {cwd: workDir, stdio: "ignore"});
+      execFileSync("git", ["push"], {cwd: workDir, stdio: "ignore"});
+      return {repoDir, workDir};
+    };
+
+    const {repoDir: plugin} = createDummyPlugin();
 
     let preManager;
     before((done) => {
@@ -36,7 +52,8 @@ describe("vimhelp", () => {
     describe(".dirNames", () => {
       it("returns array of dir names", () => {
         const pre = preManager;
-        expect(pre.dirNames).to.eql(["github.com__thinca__vim-themis"]);
+        expect(pre.dirNames).to.have.length(1)
+          .and.to.have.deep.property("[0]").that.to.match(/__vimhelp-test-dummy-plugin-repo/);
       });
     });
 
@@ -50,7 +67,9 @@ describe("vimhelp", () => {
     describe(".runtimepaths", () => {
       it("returns array of runtimepath", () => {
         const pre = preManager;
-        expect(pre.runtimepaths).to.eql([pathJoin(pre.basePath, "github.com__thinca__vim-themis")]);
+        const pat = pathJoin(pre.basePath, ".*__vimhelp-test-dummy-plugin-repo");
+        expect(pre.runtimepaths).to.have.length(1)
+          .and.to.have.deep.property("[0]").that.to.match(new RegExp(pat));
       });
     });
 
@@ -58,7 +77,9 @@ describe("vimhelp", () => {
       it("returns the rtp provider", () => {
         const pre = preManager;
         const rtp = pre.rtpProvider;
-        expect(rtp()).to.eql([pathJoin(pre.basePath, "github.com__thinca__vim-themis")]);
+        const pat = pathJoin(pre.basePath, ".*__vimhelp-test-dummy-plugin-repo");
+        expect(rtp()).to.have.length(1)
+          .and.to.have.deep.property("[0]").that.to.match(new RegExp(pat));
       });
     });
 
