@@ -31,6 +31,16 @@ describe("vimhelp", () => {
 
     const {repoDir: plugin} = createDummyPlugin();
 
+    const contextUpdateExists = (manager) => {
+      const {repoDir, workDir} = createDummyPlugin();
+      const plugin = `file://${repoDir}`;
+      return manager.install(plugin).then(() => {
+        execFileSync("git", ["commit", "--message", "update", "--allow-empty"], {cwd: workDir, stdio: "ignore"});
+        execFileSync("git", ["push"], {cwd: workDir, stdio: "ignore"});
+        return plugin;
+      });
+    };
+
     let preManager;
     before((done) => {
       preManager = new PluginManager(temp.mkdirSync("vimhelp-test"));
@@ -185,7 +195,24 @@ describe("vimhelp", () => {
       });
 
       context("with updates", () => {
-        // TODO
+        let manager, promise, plugin;
+        before((done) => {
+          manager = newManager();
+          contextUpdateExists(manager).then((plug) => {
+            plugin = plug;
+            promise = manager[method](plugin);
+            done();
+          });
+        });
+        it("updates repository", (done) => {
+          promise.then((updateInfo) => {
+            expect(updateInfo.pluginName).to.eql(plugin);
+            expect(updateInfo.pluginPath).to.eql(manager.nameToPath(plugin));
+            expect(updateInfo.beforeVersion).to.not.eql(updateInfo.afterVersion);
+            expect(updateInfo.updated()).to.be.true;
+            done();
+          }).catch(done);
+        });
       });
 
       context("with no exist path", () => {
