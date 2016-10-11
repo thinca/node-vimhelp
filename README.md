@@ -145,6 +145,20 @@ This class doesn't do a exclusive operation at all for simplification.
   - Path to vim command.  "vim" in the `$PATH` is used in default.
   - This is used when updating helptags.
 
+#### .plugins
+
+An array of installed plugin informations.  Read only.
+Each entry is object as follows:
+
+```javascript
+{
+  pluginName: <plugin name>,
+  dirName: <dir name>,
+  runtimepath: <runtimepath>,
+  repository: <URL of repository>
+}
+```
+
 #### .pluginNames
 
 An array of installed `{plugin-name}`s.  Read only.

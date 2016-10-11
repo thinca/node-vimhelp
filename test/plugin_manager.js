@@ -59,6 +59,16 @@ describe("vimhelp", () => {
       return new PluginManager(temp.mkdirSync("vimhelp-test"));
     };
 
+    describe(".plugins", () => {
+      it("returns array of plugin informations", () => {
+        const pre = preManager;
+        const plugins = pre.plugins;
+        expect(plugins).to.have.length(1);
+        const plugin = plugins[0];
+        expect(plugin).to.include.keys(["pluginName", "dirName", "runtimepath", "repository"]);
+      });
+    });
+
     describe(".dirNames", () => {
       it("returns array of dir names", () => {
         const pre = preManager;
