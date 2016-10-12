@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+v1.1.0 (2016-10-13)
+-------------------
+
+- Add `PluginManager#plugins`.
+- Improve the result of help.
+- Fix `PluginManager#update()`.
+
+
 v1.0.2 (2016-09-03)
 -------------------
 
