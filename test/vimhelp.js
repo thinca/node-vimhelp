@@ -73,6 +73,14 @@ describe("vimhelp", () => {
             done();
           }).catch(done);
         });
+
+        it("can separate section when the line ends with >", (done) => {
+          vimhelp.search("E32").then((helpText) => {
+            expect(helpText).to.include("E32");
+            expect(helpText).to.not.include("E141");
+            done();
+          }).catch(done);
+        });
       });
 
       it("removes extra commands", (done) => {
@@ -81,6 +89,7 @@ describe("vimhelp", () => {
           done();
         }).catch(done);
       });
+
       it("can not execute extra commands by |", (done) => {
         vimhelp.search("help|enew").then((helpText) => {
           done(helpText);
