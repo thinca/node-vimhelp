@@ -81,6 +81,16 @@ describe("vimhelp", () => {
             done();
           }).catch(done);
         });
+
+        it("can handle a tag that is placed to head of line", (done) => {
+          vimhelp.search("[:alpha:]").then((helpText) => {
+            const lines = helpText.split("\n");
+            expect(lines).to.have.lengthOf(1);
+            expect(helpText).to.include("[:alpha:]");
+            expect(helpText).to.not.include("[:blank:]");
+            done();
+          }).catch(done);
+        });
       });
 
       it("removes extra commands", (done) => {
