@@ -11,9 +11,7 @@ process.on("unhandledRejection", (reason) => {
 });
 
 describe("vimhelp", () => {
-  describe("PluginManager", function() {
-    this.timeout(10000);  // for git clone
-
+  describe("PluginManager", () => {
     const createDummyPlugin = () => {
       const repoDir = temp.mkdirSync("vimhelp-test-dummy-plugin-repo");
       execFileSync("git", ["init", "--bare", repoDir], {stdio: "ignore"});
