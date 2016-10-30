@@ -185,6 +185,10 @@ Uninstalls a installed Vim plugin.  Returns a Promise.
 When Uninstallation succeeded, resolved by the path of uninstalled plugin.
 Otherwise, rejected by Error object or an object like `{errorCode, resultText, errorText}`.
 
+#### .clean()
+
+Uninstalls all Vim plugins.
+
 #### .update([{plugin-names}])
 
 Updates installed plugins.  `{plugin-names}` is an array of `{plugin-name}`.

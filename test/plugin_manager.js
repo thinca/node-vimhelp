@@ -171,6 +171,21 @@ describe("vimhelp", () => {
       });
     });
 
+    describe(".clean()", () => {
+      let manager;
+      before((done) => {
+        manager = newManager();
+        manager.install(plugin).then(() => done()).catch(done);
+      });
+      it("uninstalls plugins", (done) => {
+        expect(manager.dirNames).to.not.be.empty;
+        manager.clean().then(() => {
+          expect(manager.dirNames).to.be.empty;
+          done();
+        }).catch(done);
+      });
+    });
+
     const behavesUpdate = (method) => {
       let pluginPath, tags;
 

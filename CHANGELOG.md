@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+Next Release
+-------------------
+
+- Add `PluginManager#clean()`.
+
+
 v1.1.1 (2016-10-16)
 -------------------
 
