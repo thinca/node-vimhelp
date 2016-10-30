@@ -27,7 +27,8 @@ before_script:
 
 script:
   - npm run lint
-  - npm run coverage && npm run coveralls
+  - npm run coverage
 
 after_success:
+  - npm run coveralls
   - '[[ -z "${TRAVIS_TAG}" ]] || npm publish'
