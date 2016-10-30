@@ -4,7 +4,7 @@ const {join: pathJoin} = require("path");
 const {execFileSync} = require("child_process");
 const temp = require("temp").track();
 const isThere = require("is-there");
-const {PluginManager} = require("../lib/vimhelp");
+const PluginManager = require("../lib/plugin_manager");
 
 process.on("unhandledRejection", (reason) => {
   console.log(reason);

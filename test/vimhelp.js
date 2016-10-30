@@ -1,7 +1,8 @@
 const {expect} = require("chai");
-const rewire = require("rewire");
-const VIMHELP = rewire("../lib/vimhelp");
-const {VimHelp} = VIMHELP;
+const proxyquire = require("proxyquire");
+const execVim = require("../lib/exec_vim");
+let execVimStub = execVim;
+const VimHelp = proxyquire("../lib/vimhelp", {"./exec_vim": (...args) => execVimStub(...args)});
 
 process.on("unhandledRejection", (reason) => {
   console.log(reason);
@@ -15,12 +16,11 @@ describe("vimhelp", () => {
     });
     describe(".search()", () => {
       const hijackExecVim = () => {
-        let revert;
         before(() => {
-          revert = VIMHELP.__set__("execVim", (vimBin, commands) => commands);
+          execVimStub = (vimBin, commands) => commands;
         });
         after(() => {
-          revert();
+          execVimStub = execVim;
         });
       };
 
