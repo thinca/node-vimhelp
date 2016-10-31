@@ -5,6 +5,7 @@ Next Release
 -------------------
 
 - Add `PluginManager#clean()`.
+- Clean up internal.
 
 
 v1.1.1 (2016-10-16)
