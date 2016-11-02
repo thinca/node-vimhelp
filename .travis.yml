@@ -33,4 +33,4 @@ script:
 
 after_success:
   - npm run coveralls
-  - '[[ -z "${TRAVIS_TAG}" ]] || npm publish'
+  - '[[ -z "${TRAVIS_TAG}" || "${TRAVIS_NODE_VERSION}" != "node" ]] || npm publish'
