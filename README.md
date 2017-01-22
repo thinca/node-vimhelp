@@ -95,10 +95,8 @@ References
 
 `VimHelp` can take help text of Vim via `vim` command.
 
-#### new VimHelp([{rtpProvider} [, {vimBin}]])
+#### new VimHelp([{vimBin}])
 
-- `{rtpProvider}`
-  - A runtimepath provider.  See `.setRTPProvider()` for detail.
 - `{vimBin}`
   - Path to vim command.  "vim" in the `$PATH` is used in default.
 
