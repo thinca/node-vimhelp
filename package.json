@@ -7,16 +7,16 @@
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
   "dependencies": {
-    "is-there": "^4.3.6",
+    "is-there": "^4.4.3",
     "rmdir": "^1.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "coveralls": "^2.11.14",
-    "eslint": "^2.13.1",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.6.0",
     "istanbul": "^0.4.5",
-    "mocha": "^2.5.3",
-    "proxyquire": "^1.7.10",
+    "mocha": "^5.2.0",
+    "proxyquire": "^1.8.0",
     "temp": "^0.8.3"
   },
   "engines": {
