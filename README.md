@@ -4,7 +4,7 @@ node-vimhelp
 [![NPM Version][npm-image]][npm-url]
 [![Node.js Version][node-version-image]][node-version-url]
 [![Linux Build][travis-image]][travis-url]
-[![Test Coverage][coveralls-image]][coveralls-url]
+[![Test Coverage][codecov-image]][codecov-url]
 
 Show the help of [Vim](https://github.com/vim/vim).
 
@@ -231,5 +231,5 @@ thinca <thinca+npm@gmail.com>
 [node-version-url]: https://nodejs.org/en/download/
 [travis-image]: https://img.shields.io/travis/thinca/node-vimhelp/master.svg?label=linux
 [travis-url]: https://travis-ci.org/thinca/node-vimhelp
-[coveralls-image]: https://img.shields.io/coveralls/thinca/node-vimhelp/master.svg
-[coveralls-url]: https://coveralls.io/r/thinca/node-vimhelp?branch=master
+[codecov-image]: https://codecov.io/gh/thinca/node-vimhelp/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/thinca/node-vimhelp
