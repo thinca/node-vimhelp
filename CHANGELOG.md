@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+v1.2.3 (2018-09-26)
+-------------------
+
+- Change auto deploying configuration.
+  - This is a test release for the changing.
+
 v1.2.2 (2018-09-25)
 -------------------
 
