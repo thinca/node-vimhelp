@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+v1.2.2 (2018-09-25)
+-------------------
+
+- Fix behavior when `$DISPLAY` environment variable is set.
+- Update dependencies.
+  - Use `npm audit fix --force`.
+
+
 v1.2.1 (2016-11-03)
 -------------------
 
