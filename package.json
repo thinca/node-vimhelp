@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "is-there": "^4.4.3",
-    "rmdir": "^1.2.0"
+    "rimraf": "^2.6.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
