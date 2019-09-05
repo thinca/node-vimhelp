@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "is-there": "^4.4.4",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.7.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
