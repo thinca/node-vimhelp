@@ -217,7 +217,7 @@ $ npm test
 License
 -------
 
-Zlib License
+[zlib License](LICENSE.txt)
 
 Author
 ------
