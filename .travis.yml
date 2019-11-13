@@ -37,7 +37,6 @@ before_script:
   - git --version
 
 script:
-  - npm run lint
   - npm run coverage
 
 after_success:
@@ -45,6 +44,13 @@ after_success:
 
 jobs:
   include:
+    - name: Lint
+      node_js: "node"
+      addons: {}
+      before_install: skip
+      script:
+        - npm run lint
+      after_success: skip
     - stage: npm release
       if: tag IS present
       node_js: "node"
