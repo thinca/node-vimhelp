@@ -13,8 +13,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^5.16.0",
-    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
+    "nyc": "^14.1.1",
     "proxyquire": "^1.8.0",
     "temp": "^0.8.3"
   },
@@ -38,8 +38,8 @@
   },
   "scripts": {
     "clean": "rm -fr coverage",
-    "coverage": "istanbul cover _mocha --report lcovonly",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "lint": "eslint lib test",
-    "test": "mocha"
+    "test": "nyc mocha"
   }
 }

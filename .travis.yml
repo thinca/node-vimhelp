@@ -35,9 +35,10 @@ before_script:
   - git --version
 
 script:
-  - npm run coverage
+  - npm test
 
 after_success:
+  - npm run coverage
   - codecov
 
 jobs:
