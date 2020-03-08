@@ -1,71 +1,62 @@
-CHANGELOG
-=========
+# CHANGELOG
 
-v1.2.5 (2019-09-06)
--------------------
+## v1.2.5 (2019-09-06)
 
 - Update dependencies.
 
-v1.2.4 (2019-05-29)
--------------------
+
+## v1.2.4 (2019-05-29)
 
 - Update dependencies.
 
-v1.2.3 (2018-09-26)
--------------------
+
+## v1.2.3 (2018-09-26)
 
 - Change auto deploying configuration.
   - This is a test release for the changing.
 
-v1.2.2 (2018-09-25)
--------------------
+
+## v1.2.2 (2018-09-25)
 
 - Fix behavior when `$DISPLAY` environment variable is set.
 - Update dependencies.
   - Use `npm audit fix --force`.
 
 
-v1.2.1 (2016-11-03)
--------------------
+## v1.2.1 (2016-11-03)
 
 - Update dependencies.
 - Improve test style.
 
 
-v1.2.0 (2016-11-01)
--------------------
+## v1.2.0 (2016-11-01)
 
 - Add `PluginManager#clean()`.
 - Clean up internal.
 
 
-v1.1.1 (2016-10-16)
--------------------
+## v1.1.1 (2016-10-16)
 
 - Auto publish by Travis CI.
 
 
-v1.1.0 (2016-10-13)
--------------------
+## v1.1.0 (2016-10-13)
 
 - Add `PluginManager#plugins`.
 - Improve the result of help.
 - Fix `PluginManager#update()`.
 
 
-v1.0.2 (2016-09-03)
--------------------
+## v1.0.2 (2016-09-03)
 
 - Fix a bug that can execute any Vim commands.
 
 
-v1.0.1 (2016-06-12)
--------------------
+## v1.0.1 (2016-06-12)
 
 - Avoid an error related to Git.
 
 
-v1.0.0 (2016-06-11)
--------------------
+## v1.0.0 (2016-06-11)
 
 - First release.
