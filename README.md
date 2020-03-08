@@ -13,8 +13,8 @@ This package uses Vim in background.  So you need Vim in your environment.
 Requirements
 ------------
 
-- Node.js v6.0.0+
-  - This is written in ES2015.
+- Node.js v8.3.0+
+  - Some dev dependency use spread syntax for object literal, so can not test before this version.
 - Vim
   - Version 7.4 or later is recommended.
 - Git
