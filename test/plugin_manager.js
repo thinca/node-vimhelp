@@ -73,7 +73,7 @@ describe("vimhelp", () => {
       it("returns array of dir names", () => {
         const pre = preManager;
         expect(pre.dirNames).to.have.length(1)
-          .and.to.have.deep.property("[0]").that.to.match(/__vimhelp-test-dummy-plugin-repo/);
+          .and.to.have.nested.property("[0]").that.to.match(/__vimhelp-test-dummy-plugin-repo/);
       });
     });
 
@@ -89,7 +89,7 @@ describe("vimhelp", () => {
         const pre = preManager;
         const pat = pathJoin(pre.basePath, ".*__vimhelp-test-dummy-plugin-repo");
         expect(pre.runtimepaths).to.have.length(1)
-          .and.to.have.deep.property("[0]").that.to.match(new RegExp(pat));
+          .and.to.have.nested.property("[0]").that.to.match(new RegExp(pat));
       });
     });
 
@@ -99,7 +99,7 @@ describe("vimhelp", () => {
         const rtp = pre.rtpProvider;
         const pat = pathJoin(pre.basePath, ".*__vimhelp-test-dummy-plugin-repo");
         expect(rtp()).to.have.length(1)
-          .and.to.have.deep.property("[0]").that.to.match(new RegExp(pat));
+          .and.to.have.nested.property("[0]").that.to.match(new RegExp(pat));
       });
     });
 
