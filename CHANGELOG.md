@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Update dependencies.
+
+
 ## v1.2.5 (2019-09-06)
 
 - Update dependencies.
