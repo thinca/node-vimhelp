@@ -10,8 +10,6 @@ process.on("unhandledRejection", (reason) => {
   console.log(reason);
 });
 
-const makeReject = Promise.reject.bind(Promise);
-
 describe("vimhelp", () => {
   describe("PluginManager", () => {
     const createDummyPlugin = () => {
@@ -31,14 +29,13 @@ describe("vimhelp", () => {
 
     const {repoDir: plugin} = createDummyPlugin();
 
-    const contextUpdateExists = (manager) => {
+    const contextUpdateExists = async (manager) => {
       const {repoDir, workDir} = createDummyPlugin();
       const plugin = `file://${repoDir}`;
-      return manager.install(plugin).then(() => {
-        execFileSync("git", ["commit", "--message", "update", "--allow-empty"], {cwd: workDir, stdio: "ignore"});
-        execFileSync("git", ["push"], {cwd: workDir, stdio: "ignore"});
-        return plugin;
-      });
+      await manager.install(plugin);
+      execFileSync("git", ["commit", "--message", "update", "--allow-empty"], {cwd: workDir, stdio: "ignore"});
+      execFileSync("git", ["push"], {cwd: workDir, stdio: "ignore"});
+      return plugin;
     };
 
     let preManager;
@@ -110,59 +107,66 @@ describe("vimhelp", () => {
           manager = newManager();
           promise = manager.install(plugin);
         });
-        it("installs a plugin", () => {
+        it("installs a plugin", async () => {
           const path = manager.nameToPath(plugin);
-          return promise.then(() => {
-            expect(isThere(path)).to.be.ok;
-            const tags = pathJoin(path, "doc", "tags");
-            expect(isThere(tags)).to.be.ok;
-          });
+          await promise;
+          expect(isThere(path)).to.be.ok;
+          const tags = pathJoin(path, "doc", "tags");
+          expect(isThere(tags)).to.be.ok;
         });
-        it("returns version hash", () => {
-          return promise.then((version) => {
-            expect(version).to.match(/^[0-9a-f]{40}$/);
-          });
+        it("returns version hash", async () => {
+          const version = await promise;
+          expect(version).to.match(/^[0-9a-f]{40}$/);
         });
         context("with already installed", () => {
-          it("is fail", () => {
-            return promise.then(() => {
-              return manager.install(plugin).then(makeReject, (error) => {
-                expect(error).to.be.an("error");
-                expect(error).to.have.property("message").and.contain(plugin);
-              });
-            });
+          it("is fail", async () => {
+            await promise;
+            try {
+              await manager.install(plugin);
+            } catch (error) {
+              expect(error).to.be.an("error");
+              expect(error).to.have.property("message").and.contain(plugin);
+              return;
+            }
+            expect.fail();
           });
         });
       });
 
       context("with non-exist plugin", () => {
-        it("is fail", () => {
-          return preManager.install("thinca/non-exist-plugin").then(makeReject, (error) => {
+        it("is fail", async () => {
+          try {
+            await preManager.install("thinca/non-exist-plugin");
+          } catch (error) {
             expect(error).to.have.property("exitCode").and.not.equal(0);
-          });
+            return;
+          }
+          expect.fail();
         });
       });
     });
 
     describe(".uninstall()", () => {
-      it("uninstalls a plugin", () => {
+      it("uninstalls a plugin", async () => {
         const manager = newManager();
         const path = manager.nameToPath(plugin);
-        return manager.install(plugin).then((version) => {
-          expect(isThere(path)).to.be.ok;
-          expect(version).to.match(/^[0-9a-f]{40}$/);
-          return manager.uninstall(plugin);
-        }).then((path) => {
-          expect(isThere(path)).to.not.be.ok;
-        });
+        const version = await manager.install(plugin);
+        expect(isThere(path)).to.be.ok;
+        expect(version).to.match(/^[0-9a-f]{40}$/);
+        const afterPath = await manager.uninstall(plugin);
+        expect(isThere(afterPath)).to.not.be.ok;
       });
 
       context("with not installed plugin", () => {
-        it("is fail", () => {
-          return preManager.uninstall("thinca/not-installed-plugin").then(makeReject, (error) => {
+        it("is fail", async () => {
+          try {
+            await preManager.uninstall("thinca/not-installed-plugin");
+          } catch (error) {
             expect(error).to.be.an("error");
             expect(error.message).to.contain("Plugin is not installed:");
-          });
+            return;
+          }
+          expect.fail();
         });
       });
     });
@@ -173,11 +177,10 @@ describe("vimhelp", () => {
         manager = newManager();
         return manager.install(plugin);
       });
-      it("uninstalls plugins", () => {
+      it("uninstalls plugins", async () => {
         expect(manager.dirNames).to.not.be.empty;
-        return manager.clean().then(() => {
-          expect(manager.dirNames).to.be.empty;
-        });
+        await manager.clean();
+        expect(manager.dirNames).to.be.empty;
       });
     });
 
@@ -194,46 +197,46 @@ describe("vimhelp", () => {
         before(() => {
           promise = preManager[method](plugin);
         });
-        it("does nothing as result", () => {
-          return promise.then(() => {
-            expect(isThere(pluginPath)).to.be.true;
-            expect(isThere(tags)).to.be.false;
-          });
+        it("does nothing as result", async () => {
+          await promise;
+          expect(isThere(pluginPath)).to.be.true;
+          expect(isThere(tags)).to.be.false;
         });
-        it("returns update info object with Promise", () => {
-          return promise.then((updateInfo) => {
-            expect(updateInfo.pluginName).to.eql(plugin);
-            expect(updateInfo.pluginPath).to.eql(pluginPath);
-            expect(updateInfo.beforeVersion).to.eql(updateInfo.afterVersion);
-            expect(updateInfo.updated()).to.be.false;
-          });
+        it("returns update info object with Promise", async () => {
+          const updateInfo = await promise;
+          expect(updateInfo.pluginName).to.eql(plugin);
+          expect(updateInfo.pluginPath).to.eql(pluginPath);
+          expect(updateInfo.beforeVersion).to.eql(updateInfo.afterVersion);
+          expect(updateInfo.updated()).to.be.false;
         });
       });
 
       context("with updates", () => {
         let manager, promise, plugin;
-        before(() => {
+        before(async () => {
           manager = newManager();
-          return contextUpdateExists(manager).then((plug) => {
-            plugin = plug;
-            promise = manager[method](plugin);
-          });
+          const plug = await contextUpdateExists(manager);
+          plugin = plug;
+          promise = manager[method](plugin);
         });
-        it("updates repository", () => {
-          return promise.then((updateInfo) => {
-            expect(updateInfo.pluginName).to.eql(plugin);
-            expect(updateInfo.pluginPath).to.eql(manager.nameToPath(plugin));
-            expect(updateInfo.beforeVersion).to.not.eql(updateInfo.afterVersion);
-            expect(updateInfo.updated()).to.be.true;
-          });
+        it("updates repository", async () => {
+          const updateInfo = await promise;
+          expect(updateInfo.pluginName).to.eql(plugin);
+          expect(updateInfo.pluginPath).to.eql(manager.nameToPath(plugin));
+          expect(updateInfo.beforeVersion).to.not.eql(updateInfo.afterVersion);
+          expect(updateInfo.updated()).to.be.true;
         });
       });
 
       context("with no exist path", () => {
-        it("is fail", () => {
-          return preManager[method]("not-installed-plugin").then(makeReject, (error) => {
+        it("is fail", async () => {
+          try {
+            await preManager[method]("not-installed-plugin");
+          } catch (error) {
             expect(error).to.be.an("error");
-          });
+            return;
+          }
+          expect.fail();
         });
       });
     };
@@ -259,21 +262,19 @@ describe("vimhelp", () => {
           before(() => {
             promise = preManager.updateAll();
           });
-          it("does nothing as result", () => {
-            return promise.then(() => {
-              expect(isThere(pluginPath)).to.be.true;
-              expect(isThere(tags)).to.be.false;
-            });
+          it("does nothing as result", async () => {
+            await promise;
+            expect(isThere(pluginPath)).to.be.true;
+            expect(isThere(tags)).to.be.false;
           });
-          it("returns updateInfos", () => {
-            return promise.then((updateInfos) => {
-              expect(updateInfos).to.have.lengthOf(1);
-              const [info] = updateInfos;
-              expect(info.pluginName).to.eql(plugin);
-              expect(info.pluginPath).to.eql(pluginPath);
-              expect(info.beforeVersion).to.eql(info.afterVersion);
-              expect(info.updated()).to.be.false;
-            });
+          it("returns updateInfos", async () => {
+            const updateInfos = await promise;
+            expect(updateInfos).to.have.lengthOf(1);
+            const [info] = updateInfos;
+            expect(info.pluginName).to.eql(plugin);
+            expect(info.pluginPath).to.eql(pluginPath);
+            expect(info.beforeVersion).to.eql(info.afterVersion);
+            expect(info.updated()).to.be.false;
           });
         });
 
@@ -291,21 +292,19 @@ describe("vimhelp", () => {
           before(() => {
             promise = preManager.updateAll(plugins);
           });
-          it("does nothing as result", () => {
-            return promise.then(() => {
-              expect(isThere(pluginPath)).to.be.true;
-              expect(isThere(tags)).to.be.false;
-            });
+          it("does nothing as result", async () => {
+            await promise;
+            expect(isThere(pluginPath)).to.be.true;
+            expect(isThere(tags)).to.be.false;
           });
-          it("returns updateInfos", () => {
-            return promise.then((updateInfos) => {
-              expect(updateInfos).to.have.lengthOf(plugins.length);
-              const [info] = updateInfos;
-              expect(info.pluginName).to.eql(plugin);
-              expect(info.pluginPath).to.eql(pluginPath);
-              expect(info.beforeVersion).to.eql(info.afterVersion);
-              expect(info.updated()).to.be.false;
-            });
+          it("returns updateInfos", async () => {
+            const updateInfos = await promise;
+            expect(updateInfos).to.have.lengthOf(plugins.length);
+            const [info] = updateInfos;
+            expect(info.pluginName).to.eql(plugin);
+            expect(info.pluginPath).to.eql(pluginPath);
+            expect(info.beforeVersion).to.eql(info.afterVersion);
+            expect(info.updated()).to.be.false;
           });
         });
 
@@ -317,26 +316,24 @@ describe("vimhelp", () => {
           before(() => {
             promise = preManager.updateAll([]);
           });
-          it("returns empty result", () => {
-            return promise.then((updateInfos) => {
-              expect(updateInfos).to.be.empty;
-            });
+          it("returns empty result", async () => {
+            const updateInfos = await promise;
+            expect(updateInfos).to.be.empty;
           });
         });
       });
     });
 
     describe(".updateTags()", () => {
-      it("updates helptags", () => {
+      it("updates helptags", async () => {
         const pluginPath = preManager.nameToPath(plugin);
         const tags = unlinkTags(pluginPath);
         expect(isThere(tags)).to.be.false;
-        return preManager.updateTags([pluginPath]).then((paths) => {
-          expect(paths).to.be.an("array");
-          expect(paths[0]).to.eql(pluginPath);
-          expect(paths).to.eql([pluginPath]);
-          expect(isThere(tags)).to.be.true;
-        });
+        const paths = await preManager.updateTags([pluginPath]);
+        expect(paths).to.be.an("array");
+        expect(paths[0]).to.eql(pluginPath);
+        expect(paths).to.eql([pluginPath]);
+        expect(isThere(tags)).to.be.true;
       });
     });
 

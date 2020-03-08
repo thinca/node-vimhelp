@@ -40,11 +40,11 @@ Synopsis
 // You can search the help of Vim.
 const {VimHelp} = require("vimhelp");
 
+(async () => {
 let vimHelp = new VimHelp();
 
-vimHelp.search("j").then((text) => {
-  console.log(text);
-};
+let text = await vimHelp.search("j");
+console.log(text);
 /* The following text is shown:
 j               or                                      *j*
 <Down>          or                                      *<Down>*
@@ -52,40 +52,42 @@ CTRL-J          or                                      *CTRL-J*
 <NL>            or                                      *<NL>* *CTRL-N*
 CTRL-N                  [count] lines downward |linewise|.
 */
+})();
 
 
 // This package have a simple plugin manager.
 const {PluginManager} = require("vimhelp");
 
+(async () => {
 // Plugins are installed to under the basedir.
 let manager = new PluginManager("/path/to/basedir");
-manager.install("thinca/vim-quickrun").then(() => {
-  console.log(manager.pluginNames);  // => ["thinca/vim-quickrun"]
-  return manager.install("vim-jp/vital.vim");
-}).then(() => {
-  console.log(manager.pluginNames);  // => ["thinca/vim-quickrun", "vim-jp/vital.vim"]
-  return manager.uninstall("vim-jp/vital.vim");
-}).then(() => {
-  console.log(manager.pluginNames);  // => ["thinca/vim-quickrun"]
-});
+
+await manager.install("thinca/vim-quickrun");
+console.log(manager.pluginNames);  // => ["thinca/vim-quickrun"]
+
+await manager.install("vim-jp/vital.vim");
+console.log(manager.pluginNames);  // => ["thinca/vim-quickrun", "vim-jp/vital.vim"]
+
+await manager.uninstall("vim-jp/vital.vim");
+console.log(manager.pluginNames);  // => ["thinca/vim-quickrun"]
 
 
 
 // You can also search the help of plugin with PluginManager.
 vimHelp.setRTPProvider(manager.rtpProvider);
-vimhelp.search("quickrun").then((text) => {
-  console.log(text);
-  // => *quickrun* is Vim plugin to execute whole/part of editing file.
-  // => (...snip)
-}
+let text = await vimhelp.search("quickrun");
+console.log(text);
+// => *quickrun* is Vim plugin to execute whole/part of editing file.
+// => (...snip)
 
 // You can specify the 'helplang' option
 vimHelp.helplang = ["ja", "en"];
-vimhelp.search("quickrun").then((text) => {
-  console.log(text);
-  // => *quickrun* は編集中のファイルの全体もしくは一部を実行する Vim プラグインです。
-  // => (...snip)
-}
+let text = await vimhelp.search("quickrun");
+console.log(text);
+// => *quickrun* は編集中のファイルの全体もしくは一部を実行する Vim プラグインです。
+// => (...snip)
+
+})();
 ```
 
 References
