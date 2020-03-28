@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Update dependencies.
+  - Now requires "Node.js v8.3.0+".
 
 
 ## v1.2.5 (2019-09-06)
