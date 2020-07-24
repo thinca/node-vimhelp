@@ -13,8 +13,7 @@ This package uses Vim in background.  So you need Vim in your environment.
 Requirements
 ------------
 
-- Node.js v10.12.0+
-  - Mocha v8 depends on this node version.
+- Node.js v12.10.0+
 - Vim
   - Version 7.4 or later is recommended.
 - Git

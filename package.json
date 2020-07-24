@@ -6,9 +6,7 @@
   "bugs": {
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
-  "dependencies": {
-    "rimraf": "^3.0.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "chai": "^4.2.0",
     "eslint": "^7.5.0",
@@ -18,7 +16,7 @@
     "temp": "^0.9.1"
   },
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=12.10.0"
   },
   "files": [
     "lib"
