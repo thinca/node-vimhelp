@@ -7,7 +7,6 @@
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
   "dependencies": {
-    "is-there": "^4.5.0",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {

@@ -3,7 +3,6 @@ const fs = require("fs");
 const {join: pathJoin} = require("path");
 const {execFileSync} = require("child_process");
 const temp = require("temp").track();
-const isThere = require("is-there");
 const PluginManager = require("../lib/plugin_manager");
 
 process.on("unhandledRejection", (reason) => {
@@ -46,7 +45,7 @@ describe("vimhelp", () => {
 
     const unlinkTags = (pluginPath) => {
       const tags = pathJoin(pluginPath, "doc", "tags");
-      if (isThere(tags)) {
+      if (fs.existsSync(tags)) {
         fs.unlinkSync(tags);
       }
       return tags;
@@ -110,9 +109,9 @@ describe("vimhelp", () => {
         it("installs a plugin", async () => {
           const path = manager.nameToPath(plugin);
           await promise;
-          expect(isThere(path)).to.be.ok;
+          expect(fs.existsSync(path)).to.be.ok;
           const tags = pathJoin(path, "doc", "tags");
-          expect(isThere(tags)).to.be.ok;
+          expect(fs.existsSync(tags)).to.be.ok;
         });
         it("returns version hash", async () => {
           const version = await promise;
@@ -151,10 +150,10 @@ describe("vimhelp", () => {
         const manager = newManager();
         const path = manager.nameToPath(plugin);
         const version = await manager.install(plugin);
-        expect(isThere(path)).to.be.ok;
+        expect(fs.existsSync(path)).to.be.ok;
         expect(version).to.match(/^[0-9a-f]{40}$/);
         const afterPath = await manager.uninstall(plugin);
-        expect(isThere(afterPath)).to.not.be.ok;
+        expect(fs.existsSync(afterPath)).to.not.be.ok;
       });
 
       context("with not installed plugin", () => {
@@ -199,8 +198,8 @@ describe("vimhelp", () => {
         });
         it("does nothing as result", async () => {
           await promise;
-          expect(isThere(pluginPath)).to.be.true;
-          expect(isThere(tags)).to.be.false;
+          expect(fs.existsSync(pluginPath)).to.be.true;
+          expect(fs.existsSync(tags)).to.be.false;
         });
         it("returns update info object with Promise", async () => {
           const updateInfo = await promise;
@@ -264,8 +263,8 @@ describe("vimhelp", () => {
           });
           it("does nothing as result", async () => {
             await promise;
-            expect(isThere(pluginPath)).to.be.true;
-            expect(isThere(tags)).to.be.false;
+            expect(fs.existsSync(pluginPath)).to.be.true;
+            expect(fs.existsSync(tags)).to.be.false;
           });
           it("returns updateInfos", async () => {
             const updateInfos = await promise;
@@ -294,8 +293,8 @@ describe("vimhelp", () => {
           });
           it("does nothing as result", async () => {
             await promise;
-            expect(isThere(pluginPath)).to.be.true;
-            expect(isThere(tags)).to.be.false;
+            expect(fs.existsSync(pluginPath)).to.be.true;
+            expect(fs.existsSync(tags)).to.be.false;
           });
           it("returns updateInfos", async () => {
             const updateInfos = await promise;
@@ -328,12 +327,12 @@ describe("vimhelp", () => {
       it("updates helptags", async () => {
         const pluginPath = preManager.nameToPath(plugin);
         const tags = unlinkTags(pluginPath);
-        expect(isThere(tags)).to.be.false;
+        expect(fs.existsSync(tags)).to.be.false;
         const paths = await preManager.updateTags([pluginPath]);
         expect(paths).to.be.an("array");
         expect(paths[0]).to.eql(pluginPath);
         expect(paths).to.eql([pluginPath]);
-        expect(isThere(tags)).to.be.true;
+        expect(fs.existsSync(tags)).to.be.true;
       });
     });
 
