@@ -1,9 +1,11 @@
-const {expect} = require("chai");
-const fs = require("fs");
-const {join: pathJoin} = require("path");
-const {execFileSync} = require("child_process");
-const temp = require("temp").track();
-const PluginManager = require("../lib/plugin_manager");
+import {expect} from "chai";
+import * as fs from "fs";
+import {join as pathJoin} from "path";
+import {execFileSync} from "child_process";
+import * as tempModule from "temp";
+import {PluginManager, UpdateInfo} from "../src/plugin_manager";
+
+const temp = tempModule.track();
 
 process.on("unhandledRejection", (reason) => {
   console.log(reason);
@@ -28,28 +30,28 @@ describe("vimhelp", () => {
 
     const {repoDir: plugin} = createDummyPlugin();
 
-    const contextUpdateExists = async (manager) => {
+    async function contextUpdateExists(manager: PluginManager): Promise<string> {
       const {repoDir, workDir} = createDummyPlugin();
       const plugin = `file://${repoDir}`;
       await manager.install(plugin);
       execFileSync("git", ["commit", "--message", "update", "--allow-empty"], {cwd: workDir, stdio: "ignore"});
       execFileSync("git", ["push"], {cwd: workDir, stdio: "ignore"});
       return plugin;
-    };
+    }
 
-    let preManager;
+    let preManager: PluginManager;
     before(() => {
       preManager = new PluginManager(temp.mkdirSync("vimhelp-test"));
       return preManager.install(plugin);
     });
 
-    const unlinkTags = (pluginPath) => {
+    function unlinkTags(pluginPath: string): string {
       const tags = pathJoin(pluginPath, "doc", "tags");
       if (fs.existsSync(tags)) {
         fs.unlinkSync(tags);
       }
       return tags;
-    };
+    }
 
     const newManager = () => {
       return new PluginManager(temp.mkdirSync("vimhelp-test"));
@@ -101,7 +103,7 @@ describe("vimhelp", () => {
 
     describe(".install()", () => {
       context("with exist plugin", () => {
-        let manager, promise;
+        let manager: PluginManager, promise: Promise<string>;
         before(() => {
           manager = newManager();
           promise = manager.install(plugin);
@@ -171,7 +173,7 @@ describe("vimhelp", () => {
     });
 
     describe(".clean()", () => {
-      let manager;
+      let manager: PluginManager;
       before(() => {
         manager = newManager();
         return manager.install(plugin);
@@ -183,8 +185,8 @@ describe("vimhelp", () => {
       });
     });
 
-    const behavesUpdate = (method) => {
-      let pluginPath, tags;
+    function behavesUpdate(method: "update" | "updatePlugin"): void {
+      let pluginPath: string, tags: string;
 
       beforeEach(() => {
         pluginPath = preManager.nameToPath(plugin);
@@ -192,7 +194,7 @@ describe("vimhelp", () => {
       });
 
       context("with no updates", () => {
-        let promise;
+        let promise: Promise<UpdateInfo>;
         before(() => {
           promise = preManager[method](plugin);
         });
@@ -211,7 +213,7 @@ describe("vimhelp", () => {
       });
 
       context("with updates", () => {
-        let manager, promise, plugin;
+        let manager: PluginManager, promise: Promise<UpdateInfo>, plugin: string;
         before(async () => {
           manager = newManager();
           const plug = await contextUpdateExists(manager);
@@ -238,7 +240,7 @@ describe("vimhelp", () => {
           expect.fail();
         });
       });
-    };
+    }
 
     describe(".update()", () => {
       behavesUpdate("update");
@@ -249,7 +251,7 @@ describe("vimhelp", () => {
     });
 
     describe(".updateAll()", () => {
-      let pluginPath, tags, promise;
+      let pluginPath: string, tags: string, promise: Promise<UpdateInfo[]>;
 
       beforeEach(() => {
         pluginPath = preManager.nameToPath(plugin);
@@ -283,7 +285,7 @@ describe("vimhelp", () => {
       });
 
       context("with plugin list as arguments", () => {
-        let plugins;
+        let plugins: string[];
         before(() => {
           plugins = [plugin];
         });
@@ -358,7 +360,7 @@ describe("vimhelp", () => {
 
     describe(".repositoryToDirname()", () => {
       const expectValue = "github.com__user__repos";
-      let repos;
+      let repos: string;
       const sample = () => {
         expect(preManager.repositoryToDirname(repos)).to.eql(expectValue);
       };

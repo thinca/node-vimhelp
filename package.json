@@ -8,12 +8,23 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.0",
+    "@types/node": "^14.0.26",
+    "@types/proxyquire": "^1.3.28",
+    "@types/temp": "^0.8.34",
+    "@typescript-eslint/eslint-plugin": "^3.7.0",
+    "@typescript-eslint/parser": "^3.7.0",
     "chai": "^4.2.0",
     "eslint": "^7.5.0",
+    "eslint-plugin-import": "^2.22.0",
     "mocha": "^8.0.1",
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",
-    "temp": "^0.9.1"
+    "source-map-support": "^0.5.19",
+    "temp": "^0.9.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
   },
   "engines": {
     "node": ">=12.10.0"
@@ -28,15 +39,16 @@
     "vim"
   ],
   "license": "Zlib",
-  "main": "./lib",
+  "main": "./lib/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "clean": "rm -fr coverage",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
-    "lint": "eslint lib test",
-    "test": "nyc mocha"
-  }
+    "build": "tsc",
+    "clean": "rm -fr coverage lib",
+    "lint": "eslint src test",
+    "test": "nyc --reporter=lcovonly --reporter=text mocha"
+  },
+  "types": "./lib/index.d.ts"
 }

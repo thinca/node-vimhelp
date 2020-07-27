@@ -1,10 +1,11 @@
-const {execFile} = require("child_process");
-const fs = require("fs");
-const {join: pathJoin} = require("path");
+import {execFile} from "child_process";
+import fs from "fs";
+import {join as pathJoin} from "path";
 
-const execVim = require("./exec_vim");
+import {RTPProvider} from "./vimhelp";
+import {execVim} from "./exec_vim";
 
-const execGit = (args, options = {}) => {
+function execGit(args: string[], options = {}): Promise<string> {
   return new Promise((resolve, reject) => {
     const defaultOptions = {env: Object.assign({}, process.env, {GIT_TERMINAL_PROMPT: "0"})};
     execFile("git", args, Object.assign(defaultOptions, options), (error, resultText, errorText) => {
@@ -15,23 +16,39 @@ const execGit = (args, options = {}) => {
       }
     });
   });
-};
+}
 
-const getPluginVersion = async (pluginPath) => {
+async function getPluginVersion(pluginPath: string): Promise<string> {
   if (!fs.existsSync(pluginPath)) {
     return Promise.reject(new Error(`pluginPath does not exist: ${pluginPath}`));
   }
   const version = await execGit(["rev-parse", "HEAD"], {cwd: pluginPath});
   return version.trim();
-};
+}
 
-class PluginManager {
-  constructor(basePath, vimBin = "vim") {
-    this.basePath = basePath;
-    this.vimBin = vimBin;
+export interface UpdateInfo {
+  pluginName: string;
+  pluginPath: string;
+  beforeVersion: string;
+  afterVersion: string;
+  updated(): boolean;
+}
+
+export interface PluginInfo {
+  pluginName: string;
+  dirName: string;
+  runtimepath: string;
+  repository: string;
+}
+
+export class PluginManager {
+  constructor(
+    public basePath: string,
+    public vimBin = "vim",
+  ) {
   }
 
-  get plugins() {
+  get plugins(): PluginInfo[] {
     return this.dirNames.map((dirName) => {
       const pluginName = this.dirnameToName(dirName);
       const repository = this.nameToRepository(pluginName);
@@ -44,23 +61,24 @@ class PluginManager {
       };
     });
   }
-  get dirNames() {
+
+  get dirNames(): string[] {
     return fs.readdirSync(this.basePath);
   }
 
-  get pluginNames() {
+  get pluginNames(): string[] {
     return this.dirNames.map(this.dirnameToName);
   }
 
-  get runtimepaths() {
+  get runtimepaths(): string[] {
     return this.dirNames.map((path) => pathJoin(this.basePath, path));
   }
 
-  get rtpProvider() {
+  get rtpProvider(): RTPProvider {
     return () => this.runtimepaths;
   }
 
-  async install(pluginName) {
+  async install(pluginName: string): Promise<string> {
     const repos = this.nameToRepository(pluginName);
     const pluginPath = this.nameToPath(pluginName);
     if (fs.existsSync(pluginPath)) {
@@ -71,7 +89,7 @@ class PluginManager {
     return await getPluginVersion(pluginPath);
   }
 
-  uninstall(pluginName) {
+  uninstall(pluginName: string): Promise<string> {
     const path = this.nameToPath(pluginName);
     return new Promise((resolve, reject) => {
       if (fs.existsSync(path)) {
@@ -82,11 +100,11 @@ class PluginManager {
     });
   }
 
-  clean() {
+  clean(): Promise<string[]> {
     return Promise.all(this.pluginNames.map(this.uninstall.bind(this)));
   }
 
-  async update(pluginName) {
+  async update(pluginName: string): Promise<UpdateInfo> {
     const info = await this.updatePlugin(pluginName);
     if (info.updated()) {
       await this.updateTags([info.pluginPath]);
@@ -94,12 +112,12 @@ class PluginManager {
     return info;
   }
 
-  async updatePlugin(pluginName) {
+  async updatePlugin(pluginName: string): Promise<UpdateInfo> {
     const pluginPath = this.nameToPath(pluginName);
     const beforeVersion = await getPluginVersion(pluginPath);
     await execGit(["pull"], {cwd: pluginPath});
     const afterVersion = await getPluginVersion(pluginPath);
-    return {
+    const updateInfo = {
       beforeVersion,
       afterVersion,
       pluginPath,
@@ -108,9 +126,10 @@ class PluginManager {
         return this.beforeVersion !== this.afterVersion;
       }
     };
+    return updateInfo;
   }
 
-  async updateAll(pluginNames = this.pluginNames) {
+  async updateAll(pluginNames = this.pluginNames): Promise<UpdateInfo[]> {
     const updateInfos = await Promise.all(
       pluginNames.map(this.updatePlugin.bind(this))
     );
@@ -121,7 +140,7 @@ class PluginManager {
     return updateInfos;
   }
 
-  async updateTags(pluginPaths) {
+  async updateTags(pluginPaths: string[]): Promise<string[]> {
     const commands = pluginPaths
       .map((path) => pathJoin(path, "doc"))
       .filter((path) => fs.existsSync(path))
@@ -134,7 +153,7 @@ class PluginManager {
     return pluginPaths;
   }
 
-  nameToRepository(pluginName) {
+  nameToRepository(pluginName: string): string {
     let repos = pluginName;
     if (!/\//.test(repos)) {
       repos = `vim-scripts/${repos}`;
@@ -145,25 +164,23 @@ class PluginManager {
     return repos;
   }
 
-  repositoryToDirname(repos) {
+  repositoryToDirname(repos: string): string {
     return repos
       .replace(/^\w+(?::\/\/|@)/, "")
       .replace(/\.git$/, "")
       .replace(/[:/]/g, "__");
   }
 
-  nameToPath(pluginName) {
+  nameToPath(pluginName: string): string {
     const repos = this.nameToRepository(pluginName);
     const dirname = this.repositoryToDirname(repos);
     return pathJoin(this.basePath, dirname);
   }
 
-  dirnameToName(dirname) {
+  dirnameToName(dirname: string): string {
     return dirname
       .replace(/__/g, "/")
       .replace(/^github\.com\//, "")
       .replace(/^vim-scripts\//, "");
   }
 }
-
-module.exports = PluginManager;

@@ -1,8 +1,14 @@
-const {expect} = require("chai");
-const proxyquire = require("proxyquire");
-const execVim = require("../lib/exec_vim");
+import {expect} from "chai";
+import proxyquire = require("proxyquire");
+import {execVim} from "../src/exec_vim";
+import {VimHelp, RTPProvider} from "../src/vimhelp";
+
 let execVimStub = execVim;
-const VimHelp = proxyquire("../lib/vimhelp", {"./exec_vim": (...args) => execVimStub(...args)});
+const VimHelpProxied = proxyquire("../src/vimhelp", {
+  "./exec_vim": {
+    execVim: (vimBin: string, commands: string[]) => execVimStub(vimBin, commands),
+  }
+}).VimHelp as typeof VimHelp;
 
 process.on("unhandledRejection", (reason) => {
   console.log(reason);
@@ -10,19 +16,20 @@ process.on("unhandledRejection", (reason) => {
 
 describe("vimhelp", () => {
   describe("VimHelp", () => {
-    let vimhelp;
+    let vimhelp: VimHelp;
+
     beforeEach(() => {
-      vimhelp = new VimHelp();
+      vimhelp = new VimHelpProxied();
     });
     describe(".search()", () => {
-      const hijackExecVim = () => {
+      function hijackExecVim() {
         before(() => {
-          execVimStub = (vimBin, commands) => commands;
+          execVimStub = async (_vimBin, commands) => commands.join("\n");
         });
         after(() => {
           execVimStub = execVim;
         });
-      };
+      }
 
       it("returns Promise object", () => {
         expect(vimhelp.search("help")).to.be.instanceof(Promise);
@@ -110,8 +117,8 @@ describe("vimhelp", () => {
         beforeEach(() => {
           vimhelp.setRTPProvider(() => ["/path/to/plugin"]);
         });
-        it("is set rtp from provider", () => {
-          const commands = vimhelp.search("word");
+        it("is set rtp from provider", async () => {
+          const commands = await vimhelp.search("word");
           expect(commands).to.include("set runtimepath+=/path/to/plugin");
         });
       });
@@ -121,15 +128,15 @@ describe("vimhelp", () => {
         beforeEach(() => {
           vimhelp.helplang = ["ja", "en"];
         });
-        it("sets 'helplang' options", () => {
-          const commands = vimhelp.search("word");
+        it("sets 'helplang' options", async () => {
+          const commands = await vimhelp.search("word");
           expect(commands).to.include("set helplang=ja,en");
         });
       });
     });
 
     describe(".setRTPProvider()", () => {
-      let provider;
+      let provider: RTPProvider;
       beforeEach(() => {
         provider = () => ["/path/to/plugin"];
       });

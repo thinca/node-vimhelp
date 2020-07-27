@@ -1,13 +1,13 @@
-const {spawn} = require("child_process");
+import {spawn} from "child_process";
 
-function execVim(vimBin, commands) {
+export function execVim(vimBin: string, commands: string[]): Promise<string> {
   return new Promise((resolve, reject) => {
     const vim = spawn(vimBin, [
       "-u", "NONE", "-i", "NONE", "-N",
       "-Z", "-X", "-R", "-e", "-s"
     ]);
-    const resultBuffers = [];
-    const errorBuffers = [];
+    const resultBuffers: Buffer[] = [];
+    const errorBuffers: Buffer[] = [];
     vim.stdout.on("data", (data) => {
       resultBuffers.push(data);
     });
@@ -30,5 +30,3 @@ function execVim(vimBin, commands) {
     vim.stdin.write(script);
   });
 }
-
-module.exports = execVim;

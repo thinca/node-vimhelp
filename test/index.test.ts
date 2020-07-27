@@ -1,6 +1,6 @@
-const {expect} = require("chai");
+import {expect} from "chai";
 
-const index = require("../lib");
+import * as index from "../src";
 
 describe("vimhelp", () => {
   describe("index", () => {
