@@ -3,7 +3,8 @@ node-vimhelp
 
 [![NPM Version][npm-image]][npm-url]
 [![Node.js Version][node-version-image]][node-version-url]
-[![Build Status][travis-image]][travis-url]
+[![Test][test-ci-badge]][test-ci-action]
+[![Lint][lint-ci-badge]][lint-ci-action]
 [![Test Coverage][codecov-image]][codecov-url]
 
 Show the help of [Vim](https://github.com/vim/vim).
@@ -230,7 +231,9 @@ thinca <thinca+npm@gmail.com>
 [npm-url]: https://npmjs.org/package/vimhelp
 [node-version-image]: https://img.shields.io/node/v/vimhelp.svg
 [node-version-url]: https://nodejs.org/en/download/
-[travis-image]: https://travis-ci.com/thinca/node-vimhelp.svg?branch=master
-[travis-url]: https://travis-ci.com/thinca/node-vimhelp
+[test-ci-badge]: ./../../workflows/CI/badge.svg
+[test-ci-action]: ./../../actions?query=workflow%3ACI
+[lint-ci-badge]: ./../../workflows/Lint/badge.svg
+[lint-ci-action]: ./../../actions?query=workflow%3ALint
 [codecov-image]: https://codecov.io/gh/thinca/node-vimhelp/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/thinca/node-vimhelp

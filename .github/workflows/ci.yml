@@ -1,0 +1,63 @@
+name: 'CI'
+on: ['push', 'pull_request']
+
+jobs:
+  test:
+    name: 'Test on Node.js ${{ matrix.node-version }}'
+    strategy:
+      matrix:
+        node-version:
+          - "12.10"
+          - "12"
+          - "13.0"
+          - "13"
+          - "14.0"
+          - "14"
+      fail-fast: false
+
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 10
+
+    steps:
+      - uses: 'actions/checkout@v2'
+      - name: 'Setup Node.js ${{ matrix.node-version }}'
+        uses: 'actions/setup-node@v2-beta'
+        with:
+          node-version: '${{ matrix.node-version }}'
+      - uses: 'bahmutov/npm-install@v1'
+      - name: 'Check tool versions'
+        run: |
+          node --version
+          vim --version
+          git --version
+      - name: 'Run test'
+        run: |
+          npm test
+      - name: 'Send coverage'
+        uses: 'codecov/codecov-action@v1'
+        env:
+          NODE: '${{ matrix.node-version }}'
+          REF: '${{ github.ref }}'
+        with:
+          env_vars: 'NODE,REF'
+
+  publish:
+    name: 'Publish'
+    if: contains(github.ref, 'tags/v')
+    needs: 'test'
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: 'actions/checkout@v2'
+      - name: 'Setup Node.js 12 (LTS)'
+        uses: 'actions/setup-node@v2-beta'
+        with:
+          node-version: '12'
+      - uses: 'bahmutov/npm-install@v1'
+      - name: 'Prepare for publishing a new npm package'
+        run: |
+          npm run --silent build
+      - name: 'Publish a new npm package'
+        uses: 'JS-DevTools/npm-publish@v1'
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
