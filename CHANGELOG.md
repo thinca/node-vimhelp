@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased
+
+- Update dependencies.
+  - Now requires "Node.js v12.10.0+".
+- Change around development environment.
+  - Use TypeScript.
+  - Use GitHub Actions.
+
+
 ## v2.0.0 (2020-03-29)
 
 - Update dependencies.
