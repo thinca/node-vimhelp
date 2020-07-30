@@ -48,7 +48,8 @@
     "build": "tsc",
     "clean": "rm -fr coverage lib",
     "lint": "eslint src test",
-    "test": "nyc --reporter=lcovonly --reporter=text mocha"
+    "test": "nyc --reporter=lcovonly --reporter=text mocha",
+    "version": "sed -i -e \"s/^## Unreleased$/## v$(jq -r .version package.json) ($(date '+%Y-%m-%d'))/\" CHANGELOG.md && git add CHANGELOG.md"
   },
   "types": "./lib/index.d.ts"
 }
