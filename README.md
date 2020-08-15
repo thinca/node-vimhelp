@@ -231,8 +231,8 @@ thinca <thinca+npm@gmail.com>
 [npm-url]: https://npmjs.org/package/vimhelp
 [node-version-image]: https://img.shields.io/node/v/vimhelp.svg
 [node-version-url]: https://nodejs.org/en/download/
-[test-ci-badge]: ./../../workflows/CI/badge.svg
-[test-ci-action]: ./../../actions?query=workflow%3ACI
+[test-ci-badge]: ./../../workflows/Test/badge.svg
+[test-ci-action]: ./../../actions?query=workflow%3ATest
 [lint-ci-badge]: ./../../workflows/Lint/badge.svg
 [lint-ci-action]: ./../../actions?query=workflow%3ALint
 [codecov-image]: https://codecov.io/gh/thinca/node-vimhelp/branch/master/graph/badge.svg

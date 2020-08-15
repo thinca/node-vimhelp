@@ -1,4 +1,4 @@
-name: 'CI'
+name: 'Test'
 on: ['push', 'pull_request']
 
 jobs:
@@ -40,24 +40,3 @@ jobs:
           REF: '${{ github.ref }}'
         with:
           env_vars: 'NODE,REF'
-
-  publish:
-    name: 'Publish'
-    if: contains(github.ref, 'tags/v')
-    needs: 'test'
-    runs-on: 'ubuntu-latest'
-
-    steps:
-      - uses: 'actions/checkout@v2'
-      - name: 'Setup Node.js 12 (LTS)'
-        uses: 'actions/setup-node@v2-beta'
-        with:
-          node-version: '12'
-      - uses: 'bahmutov/npm-install@v1'
-      - name: 'Prepare for publishing a new npm package'
-        run: |
-          npm run --silent build
-      - name: 'Publish a new npm package'
-        uses: 'JS-DevTools/npm-publish@v1'
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
