@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v3.0.1 (2020-08-16)
 
 - Update dependencies.
 
