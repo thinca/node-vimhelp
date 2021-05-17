@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Update dependencies.
+- Drop Node.js v13 support.
 
 
 ## v3.0.1 (2020-08-16)
