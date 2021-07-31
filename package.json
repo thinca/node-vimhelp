@@ -1,7 +1,7 @@
 {
   "name": "vimhelp",
   "description": "Show vim help.",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "author": "thinca <thinca+npm@gmail.com>",
   "bugs": {
     "url": "https://github.com/thinca/node-vimhelp/issues"
