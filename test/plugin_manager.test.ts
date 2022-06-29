@@ -163,9 +163,11 @@ describe("vimhelp", () => {
           try {
             await preManager.uninstall("thinca/not-installed-plugin");
           } catch (error) {
-            expect(error).to.be.an("error");
-            expect(error.message).to.contain("Plugin is not installed:");
-            return;
+            if (error instanceof Error) {
+              expect(error).to.be.an("error");
+              expect(error.message).to.contain("Plugin is not installed:");
+              return;
+            }
           }
           expect.fail();
         });

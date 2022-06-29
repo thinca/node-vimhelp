@@ -105,7 +105,8 @@ describe("vimhelp", () => {
           try {
             await vimhelp.search("never-never-exist-help");
           } catch (error) {
-            expect(error.errorText).to.match(/^E149:/);
+            expect(error).to.have.property("errorText")
+              .that.to.match(/^E149:/);
             return;
           }
           expect.fail();
