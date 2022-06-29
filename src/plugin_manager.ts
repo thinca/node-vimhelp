@@ -93,7 +93,7 @@ export class PluginManager {
     const path = this.nameToPath(pluginName);
     return new Promise((resolve, reject) => {
       if (fs.existsSync(path)) {
-        fs.rmdir(path, {recursive: true}, (err) => err ? reject(err) : resolve(path));
+        fs.rm(path, {recursive: true}, (err) => err ? reject(err) : resolve(path));
       } else {
         reject(new Error(`Plugin is not installed: ${path}`));
       }

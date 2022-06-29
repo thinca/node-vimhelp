@@ -14,8 +14,7 @@ This package uses Vim in background.  So you need Vim in your environment.
 Requirements
 ------------
 
-- Node.js v12.10.0+
-  - v13 is not supported because it is no longer maintained
+- Node.js v14.14.0+
 - Vim
   - Version 7.4 or later is recommended.
 - Git
