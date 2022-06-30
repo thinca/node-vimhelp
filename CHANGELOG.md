@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v4.0.0 (2022-07-01)
 
 - Update dependencies.
 - Drop Node.js v12 support.
