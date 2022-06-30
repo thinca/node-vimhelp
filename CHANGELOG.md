@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+
+- Update dependencies.
+- Drop Node.js v12 support.
+  - Now requires "Node.js v14.14.0+".
+
+
 ## v3.0.3 (2021-08-01)
 
 - Update dependencies.
