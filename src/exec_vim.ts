@@ -18,7 +18,7 @@ export function execVim(vimBin: string, commands: string[]): Promise<string> {
       const resultText = Buffer.concat(resultBuffers).toString();
       const errorText = Buffer.concat(errorBuffers).toString();
       if (exitCode === 0 && errorText === "") {
-        resolve(resultText.trimRight());
+        resolve(resultText.trimEnd());
       } else {
         reject({exitCode, resultText, errorText});
       }
