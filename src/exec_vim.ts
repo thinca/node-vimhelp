@@ -25,7 +25,7 @@ export function execVim(vimBin: string, commands: string[]): Promise<string> {
     });
     const script = commands
       .map((c) => c.replace(/\r?\n[^]*/, ""))
-      .filter((c) => /\S/.test(c || ""))
+      .filter((c) => /\S/.test(c))
       .map((c) => `${c}\n`).join("");
     vim.stdin.write(script);
   });
