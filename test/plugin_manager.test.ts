@@ -32,11 +32,10 @@ describe("vimhelp", () => {
 
     async function contextUpdateExists(manager: PluginManager): Promise<string> {
       const {repoDir, workDir} = createDummyPlugin();
-      const plugin = `file://${repoDir}`;
-      await manager.install(plugin);
+      await manager.install(repoDir);
       execFileSync("git", ["commit", "--message", "update", "--allow-empty"], {cwd: workDir, stdio: "ignore"});
       execFileSync("git", ["push"], {cwd: workDir, stdio: "ignore"});
-      return plugin;
+      return repoDir;
     }
 
     const newManager = () => {
@@ -282,17 +281,35 @@ describe("vimhelp", () => {
         });
 
         context("with updates", () => {
-          // TODO
+          let updatedPlugin: string;
+          before(async () => {
+            updatedPlugin = await contextUpdateExists(preManager);
+            promise = preManager.updateAll();
+          });
+          it("updates repository", async () => {
+            const updateInfos = await promise;
+            expect(updateInfos).to.have.lengthOf(2);
+            updateInfos.sort((a, b) => a.updated() === b.updated() ? 0 : a.updated() ? 1 : -1);
+            const [notUpdatedInfo, updatedInfo] = updateInfos;
+
+            expect(notUpdatedInfo.pluginName).to.eql(plugin);
+            expect(notUpdatedInfo.pluginPath).to.eql(pluginPath);
+            expect(notUpdatedInfo.beforeVersion).to.eql(notUpdatedInfo.afterVersion);
+            expect(notUpdatedInfo.updated()).to.be.false;
+
+            expect(updatedInfo.pluginName).to.eql(updatedPlugin);
+            expect(updatedInfo.pluginPath).to.eql(preManager.nameToPath(updatedPlugin));
+            expect(updatedInfo.beforeVersion).to.not.eql(updatedInfo.afterVersion);
+            expect(updatedInfo.updated()).to.be.true;
+          });
         });
       });
 
       context("with plugin list as arguments", () => {
         let plugins: string[];
-        before(() => {
-          plugins = [plugin];
-        });
         context("with no updates", () => {
           before(() => {
+            plugins = [plugin];
             promise = preManager.updateAll(plugins);
           });
           it("does nothing as result", async () => {
@@ -312,7 +329,49 @@ describe("vimhelp", () => {
         });
 
         context("with updates", () => {
-          // TODO
+          let updatedPlugin: string;
+
+          before(async () => {
+            updatedPlugin = await contextUpdateExists(preManager);
+          });
+
+          context("when argument does not contain updateing plugin", () => {
+            before(async () => {
+              plugins = [plugin];
+              promise = preManager.updateAll(plugins);
+            });
+            it("does nothing as result", async () => {
+              await promise;
+              expect(fs.existsSync(pluginPath)).to.be.true;
+              expect(fs.existsSync(tags)).to.be.false;
+            });
+            it("returns updateInfos", async () => {
+              const updateInfos = await promise;
+              expect(updateInfos).to.have.lengthOf(plugins.length);
+              const [info] = updateInfos;
+              expect(info.pluginName).to.eql(plugin);
+              expect(info.pluginPath).to.eql(pluginPath);
+              expect(info.beforeVersion).to.eql(info.afterVersion);
+              expect(info.updated()).to.be.false;
+            });
+          });
+
+          context("when argument does not contain updateing plugin", () => {
+            before(async () => {
+              plugins = [updatedPlugin];
+              promise = preManager.updateAll(plugins);
+            });
+            it("updates repository", async () => {
+              const updateInfos = await promise;
+              expect(updateInfos).to.have.lengthOf(plugins.length);
+
+              const [info] = updateInfos;
+              expect(info.pluginName).to.eql(updatedPlugin);
+              expect(info.pluginPath).to.eql(preManager.nameToPath(updatedPlugin));
+              expect(info.beforeVersion).to.not.eql(info.afterVersion);
+              expect(info.updated()).to.be.true;
+            });
+          });
         });
 
         context("with empty array", () => {
