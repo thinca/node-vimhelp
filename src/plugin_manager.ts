@@ -1,5 +1,6 @@
 import {execFile} from "child_process";
 import fs from "fs";
+import fsp from "fs/promises";
 import {join as pathJoin} from "path";
 
 import {RTPProvider} from "./vimhelp";
@@ -89,15 +90,13 @@ export class PluginManager {
     return await getPluginVersion(pluginPath);
   }
 
-  uninstall(pluginName: string): Promise<string> {
+  async uninstall(pluginName: string): Promise<string> {
     const path = this.nameToPath(pluginName);
-    return new Promise((resolve, reject) => {
-      if (fs.existsSync(path)) {
-        fs.rm(path, {recursive: true}, (err) => err ? reject(err) : resolve(path));
-      } else {
-        reject(new Error(`Plugin is not installed: ${path}`));
-      }
-    });
+    if (!fs.existsSync(path)) {
+      throw new Error(`Plugin is not installed: ${path}`);
+    }
+    await fsp.rm(path, {recursive: true});
+    return path;
   }
 
   clean(): Promise<string[]> {
