@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Improve tests.
+
+
 ## v4.0.0 (2022-07-01)
 
 - Update dependencies.
