@@ -39,9 +39,13 @@ describe("vimhelp", () => {
       return plugin;
     }
 
+    const newManager = () => {
+      return new PluginManager(temp.mkdirSync("vimhelp-test"));
+    };
+
     let preManager: PluginManager;
     before(() => {
-      preManager = new PluginManager(temp.mkdirSync("vimhelp-test"));
+      preManager = newManager();
       return preManager.install(plugin);
     });
 
@@ -52,10 +56,6 @@ describe("vimhelp", () => {
       }
       return tags;
     }
-
-    const newManager = () => {
-      return new PluginManager(temp.mkdirSync("vimhelp-test"));
-    };
 
     describe(".plugins", () => {
       it("returns array of plugin informations", () => {
