@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v4.1.0 (2022-07-10)
 
 - Add `ExecError`.
 - Export more types.
