@@ -4,14 +4,14 @@ import fsp from "fs/promises";
 import {join as pathJoin} from "path";
 
 import {RTPProvider} from "./vimhelp";
-import {execVim} from "./exec_vim";
+import {execVim, ExecError} from "./exec_vim";
 
 function execGit(args: string[], options = {}): Promise<string> {
   return new Promise((resolve, reject) => {
     const defaultOptions = {env: Object.assign({}, process.env, {GIT_TERMINAL_PROMPT: "0"})};
     execFile("git", args, Object.assign(defaultOptions, options), (error, resultText, errorText) => {
       if (error) {
-        reject({exitCode: error.code, resultText, errorText});
+        reject(new ExecError(error.code, resultText, errorText));
       } else {
         resolve(resultText);
       }

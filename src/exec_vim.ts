@@ -1,5 +1,19 @@
 import {execFile} from "child_process";
 
+export class ExecError extends Error {
+  exitCode?: number;
+  resultText: string;
+  errorText: string;
+
+  constructor(exitCode: number | undefined, resultText: string, errorText: string) {
+    super(errorText);
+    this.name = "ExecError";
+    this.exitCode = exitCode;
+    this.resultText = resultText;
+    this.errorText = errorText;
+  }
+}
+
 export function execVim(vimBin: string, commands: string[]): Promise<string> {
   return new Promise((resolve, reject) => {
     const vim = execFile(vimBin, [
@@ -7,7 +21,7 @@ export function execVim(vimBin: string, commands: string[]): Promise<string> {
       "-Z", "-X", "-R", "-e", "-s"
     ], (error, resultText, errorText) => {
       if (error) {
-        reject({exitCode: error.code, resultText, errorText});
+        reject(new ExecError(error.code, resultText, errorText));
       } else {
         resolve(resultText.trimEnd());
       }
