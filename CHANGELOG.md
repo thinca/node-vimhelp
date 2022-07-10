@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `ExecError`.
+- Export more types.
 - Improve tests.
 
 
