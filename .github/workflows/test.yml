@@ -17,7 +17,7 @@ jobs:
           - "16"
           - "18.0"
           - "18"
-          - "x"
+          - "latest"
       fail-fast: false
 
     runs-on: 'ubuntu-latest'
