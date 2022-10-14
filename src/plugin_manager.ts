@@ -6,7 +6,7 @@ import {join as pathJoin} from "path";
 import {RTPProvider} from "./vimhelp";
 import {execVim, ExecError} from "./exec_vim";
 
-function execGit(args: string[], options = {}): Promise<string> {
+export function execGit(args: string[], options = {}): Promise<string> {
   return new Promise((resolve, reject) => {
     const defaultOptions = {env: Object.assign({}, process.env, {GIT_TERMINAL_PROMPT: "0"})};
     execFile("git", args, Object.assign(defaultOptions, options), (error, resultText, errorText) => {

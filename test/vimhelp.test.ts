@@ -1,7 +1,12 @@
 import {expect} from "chai";
 import proxyquire from "proxyquire";
+import * as tempModule from "temp";
 import {execVim} from "../src/exec_vim";
 import {VimHelp, RTPProvider} from "../src/vimhelp";
+import {PluginManager} from "../src/plugin_manager"
+import {NeovimHelp} from "../src/neovim_help"
+
+const temp = tempModule.track();
 
 let execVimStub = execVim;
 const VimHelpProxied = proxyquire("../src/vimhelp", {
@@ -15,11 +20,49 @@ process.on("unhandledRejection", (reason) => {
 });
 
 describe("vimhelp", () => {
-  describe("VimHelp", () => {
+  let manager: PluginManager
+  let nvimHelp: NeovimHelp
+
+  it("Install neovim help", async () => {
+    manager = new PluginManager(temp.mkdirSync("vimhelp-test"))
+    nvimHelp = new NeovimHelp(manager)
+    await nvimHelp.update()
+    expect(nvimHelp).to.have.property("runtime").that.to.include("vimhelp-test")
+  }).timeout(10 * 1000)
+
+  it("Update neovim help", async () => {
+    await nvimHelp.update()
+    expect(nvimHelp).to.have.property("runtime").that.to.include("vimhelp-test")
+  })
+
+  describe("VimHelp", async () => {
     let vimhelp: VimHelp;
+
+    const search_await = async (word: string, callback: (result: string) => void) => {
+      for (const useNvim of [true, false]) {
+        vimhelp.useNvim = useNvim
+        const vimResult = await vimhelp.search(word);
+        callback(vimResult);
+      }
+    };
+
+    const search_catch = async (word: string, expectError: RegExp) => {
+      for (const useNvim of [true, false]) {
+        vimhelp.useNvim = useNvim
+        try {
+          await vimhelp.search(word);
+        } catch (error) {
+          expect(error).to.have.property("errorText")
+            .that.to.match(expectError);
+          console.log(expectError)
+        }
+      }
+      // expect.fail()
+    };
 
     beforeEach(() => {
       vimhelp = new VimHelpProxied();
+      vimhelp.setNvimHelpRtp(nvimHelp.runtime)
     });
     describe(".search()", () => {
       function hijackExecVim() {
@@ -32,84 +75,70 @@ describe("vimhelp", () => {
       }
 
       it("returns Promise object", () => {
+        vimhelp.useNvim = false
+        expect(vimhelp.search("help")).to.be.instanceof(Promise);
+        vimhelp.useNvim = true
         expect(vimhelp.search("help")).to.be.instanceof(Promise);
       });
 
       describe("the result", () => {
         // XXX: These test may fail when Vim's help will be updated.
         it("is a text from Vim's help", async () => {
-          const helpText = await vimhelp.search("help");
-          expect(helpText).to.include("*help*");
+          await search_await("help", result => expect(result).to.include("*help*"));
         });
 
         it("keeps the whitespaces of head", async () => {
-          const helpText = await vimhelp.search("G");
-          expect(helpText).to.match(/^\s/);
+          await search_await("G", result => expect(result).to.match(/^\s/));
         });
 
         it("doesn't have the blank chars in tail", async () => {
-          const helpText = await vimhelp.search("G");
-          expect(helpText).to.not.match(/\n$/);
+          await search_await("G", result => expect(result).to.not.match(/\n$/));
         });
 
         it("contains a range of before of a next tag from a tag", async () => {
-          const helpText = await vimhelp.search("CTRL-J");
-          const lines = helpText.split("\n");
-          expect(lines).to.have.lengthOf(5);
-          expect(lines[0]).to.include("*j*");
+          await search_await("CTRL-J", result => {
+            const lines = result.split("\n");
+            expect(lines).to.have.lengthOf(5);
+            expect(lines[0]).to.include("*j*");
+          });
         });
 
         it("can treat a tag at the head of file", async () => {
-          const helpText = await vimhelp.search("helphelp.txt");
-          expect(helpText).to.include("*helphelp.txt*");
+          await search_await("helphelp.txt", result => expect(result).to.include("*helphelp.txt*"));
         });
 
         it("does not contain separator", async () => {
-          const helpText = await vimhelp.search("o_CTRL-V");
-          expect(helpText).to.not.include("===");
+          await search_await("o_CTRL-V", result => expect(result).to.not.include("==="));
         });
 
         it("can separate section when the line ends with >", async () => {
-          const helpText = await vimhelp.search("E32");
-          expect(helpText).to.include("E32");
-          expect(helpText).to.not.include("E141");
+          await search_await("E32", result => {
+            expect(result).to.include("E32");
+            expect(result).to.not.include("E141");
+          });
         });
 
         it("can handle a tag that is placed to head of line", async () => {
-          const helpText = await vimhelp.search("[:alpha:]");
-          const lines = helpText.split("\n");
-          expect(lines).to.have.lengthOf(1);
-          expect(helpText).to.include("[:alpha:]");
-          expect(helpText).to.not.include("[:blank:]");
+          await search_await("[:alpha:]", result => {
+            const lines = result.split("\n");
+            expect(lines).to.have.lengthOf(1);
+            expect(result).to.include("[:alpha:]");
+            expect(result).to.not.include("[:blank:]");
+          });
         });
       });
 
       it("removes extra commands", async () => {
-        const helpText = await vimhelp.search("help\nenew\nput ='abc'\np\nqall!");
-        expect(helpText).to.include("*help*");
+        await search_await("help\nenew\nput ='abc'\np\nqall!", result => expect(result).to.include("*help*"));
       });
 
       it("can not execute extra commands by |", async () => {
-        try {
-          await vimhelp.search("help|enew");
-        } catch (error) {
-          expect(error).to.have.property("errorText")
-            .that.to.match(/^E149:.*helpbarenew/);
-          return;
-        }
-        expect.fail();
+        await search_catch("help|enew", /^E149:.*helpbarenew/);
       });
 
       context("when the help does not exist", () => {
         it("throws error", async () => {
-          try {
-            await vimhelp.search("never-never-exist-help");
-          } catch (error) {
-            expect(error).to.have.property("errorText")
-              .that.to.match(/^E149:/);
-            return;
-          }
-          expect.fail();
+          await search_catch("never-never-exist-help", /^E149:/);
         });
       });
 
@@ -119,8 +148,7 @@ describe("vimhelp", () => {
           vimhelp.setRTPProvider(() => ["/path/to/plugin"]);
         });
         it("is set rtp from provider", async () => {
-          const commands = await vimhelp.search("word");
-          expect(commands).to.include("set runtimepath+=/path/to/plugin");
+          await search_await("word", result => expect(result).to.include("set runtimepath+=/path/to/plugin"));
         });
       });
 
@@ -130,8 +158,7 @@ describe("vimhelp", () => {
           vimhelp.helplang = ["ja", "en"];
         });
         it("sets 'helplang' options", async () => {
-          const commands = await vimhelp.search("word");
-          expect(commands).to.include("set helplang=ja,en");
+          await search_await("word", result => expect(result).to.include("set helplang=ja,en"));
         });
       });
     });

@@ -36,6 +36,10 @@ jobs:
           node --version
           vim --version
           git --version
+      - name: 'Setup neovim'
+        uses: 'rhysd/action-setup-vim@v1'
+        with:
+          neovim: true
       - name: 'Run test'
         run: |
           npm test
