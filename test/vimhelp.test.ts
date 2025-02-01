@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import proxyquire = require("proxyquire");
+import proxyquire from "proxyquire";
 import {execVim} from "../src/exec_vim";
 import {VimHelp, RTPProvider} from "../src/vimhelp";
 
