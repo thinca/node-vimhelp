@@ -5,10 +5,10 @@ export class ExecError extends Error {
   resultText: string;
   errorText: string;
 
-  constructor(exitCode: number | undefined, resultText: string, errorText: string) {
+  constructor(exitCode: string | number | null | undefined, resultText: string, errorText: string) {
     super(errorText);
     this.name = "ExecError";
-    this.exitCode = exitCode;
+    this.exitCode = typeof exitCode === "number" ? exitCode : undefined;
     this.resultText = resultText;
     this.errorText = errorText;
   }
