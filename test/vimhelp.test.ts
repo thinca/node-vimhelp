@@ -21,6 +21,20 @@ describe("vimhelp", () => {
     beforeEach(() => {
       vimhelp = new VimHelpProxied();
     });
+
+    describe("vim command not exist", () => {
+      it("throws error", async () => {
+        const vimhelp = new VimHelpProxied("vim-not-exist");
+        try {
+          await vimhelp.search("help");
+        } catch (error) {
+          expect(error).to.have.property("exitCode")
+            .that.to.equal(undefined);
+          return;
+        }
+        expect.fail();
+      });
+    });
     describe(".search()", () => {
       function hijackExecVim() {
         before(() => {
