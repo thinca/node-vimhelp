@@ -216,6 +216,12 @@ Testing
 $ npm test
 ```
 
+Node v23.6.0 and above requires the `--no-experimental-strip-types` option.
+
+```
+$ NODE_OPTIONS=--no-experimental-strip-types npm test
+```
+
 License
 -------
 

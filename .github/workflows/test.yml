@@ -18,6 +18,9 @@ jobs:
           - "18.0"
           - "18"
           - "latest"
+        include:
+          - node-version: "latest"
+            node-options: "--no-experimental-strip-types"
       fail-fast: false
 
     runs-on: 'ubuntu-latest'
@@ -37,6 +40,8 @@ jobs:
           vim --version
           git --version
       - name: 'Run test'
+        env:
+          NODE_OPTIONS: ${{ matrix.node-options }}
         run: |
           npm test
       - name: 'Send coverage'
