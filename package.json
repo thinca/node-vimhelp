@@ -7,23 +7,23 @@
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.1",
-    "@types/mocha": "^9.1.1",
-    "@types/node": "^18.0.0",
-    "@types/proxyquire": "^1.3.28",
-    "@types/temp": "^0.9.1",
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.0",
+    "@types/proxyquire": "^1.3.31",
+    "@types/temp": "^0.9.4",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
-    "chai": "^4.3.6",
+    "chai": "^5.1.2",
     "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
-    "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
+    "mocha": "^11.1.0",
+    "nyc": "^17.1.0",
     "proxyquire": "^2.1.3",
     "source-map-support": "^0.5.21",
     "temp": "^0.9.4",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.4"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=14.14.0"
