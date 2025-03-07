@@ -17,6 +17,10 @@ jobs:
           - "16"
           - "18.0"
           - "18"
+          - "20.0"
+          - "20"
+          - "22.0"
+          - "22"
           - "latest"
         include:
           - node-version: "latest"
