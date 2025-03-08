@@ -14,6 +14,7 @@
     "@types/temp": "^0.9.4",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
+    "@vitest/coverage-istanbul": "^3.0.8",
     "chai": "^4.3.6",
     "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
@@ -23,7 +24,8 @@
     "source-map-support": "^0.5.21",
     "temp": "^0.9.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
   },
   "engines": {
     "node": ">=22.0.0"
