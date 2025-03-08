@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {describe, it, beforeEach, expect, beforeAll, afterAll} from "vitest";
 import proxyquire from "proxyquire";
 import {execVim} from "../src/exec_vim";
 import {VimHelp, RTPProvider} from "../src/vimhelp";
@@ -37,10 +37,10 @@ describe("vimhelp", () => {
     });
     describe(".search()", () => {
       function hijackExecVim() {
-        before(() => {
+        beforeAll(() => {
           execVimStub = async (_vimBin, commands) => commands.join("\n");
         });
-        after(() => {
+        afterAll(() => {
           execVimStub = execVim;
         });
       }
@@ -114,7 +114,7 @@ describe("vimhelp", () => {
         expect.fail();
       });
 
-      context("when the help does not exist", () => {
+      describe("when the help does not exist", () => {
         it("throws error", async () => {
           try {
             await vimhelp.search("never-never-exist-help");
@@ -127,7 +127,7 @@ describe("vimhelp", () => {
         });
       });
 
-      context("when rtp provider is set", () => {
+      describe("when rtp provider is set", () => {
         hijackExecVim();
         beforeEach(() => {
           vimhelp.setRTPProvider(() => ["/path/to/plugin"]);
@@ -138,7 +138,7 @@ describe("vimhelp", () => {
         });
       });
 
-      context("when helplang is set", () => {
+      describe("when helplang is set", () => {
         hijackExecVim();
         beforeEach(() => {
           vimhelp.helplang = ["ja", "en"];
