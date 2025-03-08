@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Breaking: Drop Node.js v20 and older support.
+
+
 ## v4.1.0 (2022-07-10)
 
 - Add `ExecError`.
