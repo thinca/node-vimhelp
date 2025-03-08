@@ -49,7 +49,7 @@
     "build": "tsc",
     "clean": "rm -fr coverage lib",
     "lint": "eslint src test",
-    "test": "vitest run --coverage.enabled --coverage.provider=istanbul --coverage.reporter=lcovonly --coverage.reporter=text-summary --coverage.reportOnFailure=true --coverage.include=src",
+    "test": "vitest run --config vitest.config.ts",
     "version": "sed -i -e \"s/^## Unreleased$/## v$(jq -r .version package.json) ($(date '+%Y-%m-%d'))/\" CHANGELOG.md && git add CHANGELOG.md"
   },
   "types": "./lib/index.d.ts"
