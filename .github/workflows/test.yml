@@ -11,12 +11,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - "14.14"
-          - "14"
-          - "16.0"
-          - "16"
-          - "18.0"
-          - "18"
+          - "22.0"
+          - "22"
           - "latest"
       fail-fast: false
 
