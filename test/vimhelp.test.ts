@@ -1,14 +1,6 @@
-import {describe, it, beforeEach, expect, beforeAll, afterAll} from "vitest";
-import proxyquire from "proxyquire";
-import {execVim} from "../src/exec_vim";
+import {vi, describe, it, beforeEach, expect, afterEach} from "vitest";
+import {execVim as execVimStub} from "../src/exec_vim";
 import {VimHelp, RTPProvider} from "../src/vimhelp";
-
-let execVimStub = execVim;
-const VimHelpProxied = proxyquire("../src/vimhelp", {
-  "./exec_vim": {
-    execVim: (vimBin: string, commands: string[]) => execVimStub(vimBin, commands),
-  }
-}).VimHelp as typeof VimHelp;
 
 process.on("unhandledRejection", (reason) => {
   console.log(reason);
@@ -19,12 +11,19 @@ describe("vimhelp", () => {
     let vimhelp: VimHelp;
 
     beforeEach(() => {
-      vimhelp = new VimHelpProxied();
+      vimhelp = new VimHelp();
     });
 
     describe("vim command not exist", () => {
+      beforeEach(() => {
+        vi.spyOn(vimhelp, "_execVim").mockImplementationOnce(async (commands) =>
+          await execVimStub("vim-not-exist", commands)
+        );
+      });
+      afterEach(() => {
+        vi.clearAllMocks();
+      });
       it("throws error", async () => {
-        const vimhelp = new VimHelpProxied("vim-not-exist");
         try {
           await vimhelp.search("help");
         } catch (error) {
@@ -37,11 +36,13 @@ describe("vimhelp", () => {
     });
     describe(".search()", () => {
       function hijackExecVim() {
-        beforeAll(() => {
-          execVimStub = async (_vimBin, commands) => commands.join("\n");
+        beforeEach(() => {
+          vi.spyOn(vimhelp, "_execVim").mockImplementation(
+            async (commands) => commands.join("\n")
+          );
         });
-        afterAll(() => {
-          execVimStub = execVim;
+        afterEach(() => {
+          vi.clearAllMocks();
         });
       }
 
