@@ -1,14 +1,6 @@
-import {expect} from "chai";
-import proxyquire from "proxyquire";
-import {execVim} from "../src/exec_vim";
+import {vi, describe, it, beforeEach, expect, afterEach} from "vitest";
+import {execVim as execVimStub} from "../src/exec_vim";
 import {VimHelp, RTPProvider} from "../src/vimhelp";
-
-let execVimStub = execVim;
-const VimHelpProxied = proxyquire("../src/vimhelp", {
-  "./exec_vim": {
-    execVim: (vimBin: string, commands: string[]) => execVimStub(vimBin, commands),
-  }
-}).VimHelp as typeof VimHelp;
 
 process.on("unhandledRejection", (reason) => {
   console.log(reason);
@@ -19,12 +11,19 @@ describe("vimhelp", () => {
     let vimhelp: VimHelp;
 
     beforeEach(() => {
-      vimhelp = new VimHelpProxied();
+      vimhelp = new VimHelp();
     });
 
     describe("vim command not exist", () => {
+      beforeEach(() => {
+        vi.spyOn(vimhelp, "_execVim").mockImplementationOnce(async (commands) =>
+          await execVimStub("vim-not-exist", commands)
+        );
+      });
+      afterEach(() => {
+        vi.clearAllMocks();
+      });
       it("throws error", async () => {
-        const vimhelp = new VimHelpProxied("vim-not-exist");
         try {
           await vimhelp.search("help");
         } catch (error) {
@@ -37,11 +36,13 @@ describe("vimhelp", () => {
     });
     describe(".search()", () => {
       function hijackExecVim() {
-        before(() => {
-          execVimStub = async (_vimBin, commands) => commands.join("\n");
+        beforeEach(() => {
+          vi.spyOn(vimhelp, "_execVim").mockImplementation(
+            async (commands) => commands.join("\n")
+          );
         });
-        after(() => {
-          execVimStub = execVim;
+        afterEach(() => {
+          vi.clearAllMocks();
         });
       }
 
@@ -114,7 +115,7 @@ describe("vimhelp", () => {
         expect.fail();
       });
 
-      context("when the help does not exist", () => {
+      describe("when the help does not exist", () => {
         it("throws error", async () => {
           try {
             await vimhelp.search("never-never-exist-help");
@@ -127,7 +128,7 @@ describe("vimhelp", () => {
         });
       });
 
-      context("when rtp provider is set", () => {
+      describe("when rtp provider is set", () => {
         hijackExecVim();
         beforeEach(() => {
           vimhelp.setRTPProvider(() => ["/path/to/plugin"]);
@@ -138,7 +139,7 @@ describe("vimhelp", () => {
         });
       });
 
-      context("when helplang is set", () => {
+      describe("when helplang is set", () => {
         hijackExecVim();
         beforeEach(() => {
           vimhelp.helplang = ["ja", "en"];

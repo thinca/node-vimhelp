@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {describe, it, expect, beforeAll, beforeEach} from "vitest";
 import * as fs from "fs";
 import {join as pathJoin} from "path";
 import {execFileSync} from "child_process";
@@ -43,7 +43,7 @@ describe("vimhelp", () => {
     };
 
     let preManager: PluginManager;
-    before(() => {
+    beforeAll(() => {
       preManager = newManager();
       return preManager.install(plugin);
     });
@@ -101,9 +101,9 @@ describe("vimhelp", () => {
     });
 
     describe(".install()", () => {
-      context("with exist plugin", () => {
+      describe("with exist plugin", () => {
         let manager: PluginManager, promise: Promise<string>;
-        before(() => {
+        beforeAll(() => {
           manager = newManager();
           promise = manager.install(plugin);
         });
@@ -118,7 +118,7 @@ describe("vimhelp", () => {
           const version = await promise;
           expect(version).to.match(/^[0-9a-f]{40}$/);
         });
-        context("with already installed", () => {
+        describe("with already installed", () => {
           it("is fail", async () => {
             await promise;
             try {
@@ -133,7 +133,7 @@ describe("vimhelp", () => {
         });
       });
 
-      context("with non-exist plugin", () => {
+      describe("with non-exist plugin", () => {
         it("is fail", async () => {
           try {
             await preManager.install("thinca/non-exist-plugin");
@@ -157,7 +157,7 @@ describe("vimhelp", () => {
         expect(fs.existsSync(afterPath)).to.not.be.ok;
       });
 
-      context("with not installed plugin", () => {
+      describe("with not installed plugin", () => {
         it("is fail", async () => {
           try {
             await preManager.uninstall("thinca/not-installed-plugin");
@@ -175,7 +175,7 @@ describe("vimhelp", () => {
 
     describe(".clean()", () => {
       let manager: PluginManager;
-      before(() => {
+      beforeAll(() => {
         manager = newManager();
         return manager.install(plugin);
       });
@@ -194,9 +194,9 @@ describe("vimhelp", () => {
         tags = unlinkTags(pluginPath);
       });
 
-      context("with no updates", () => {
+      describe("with no updates", () => {
         let promise: Promise<UpdateInfo>;
-        before(() => {
+        beforeAll(() => {
           promise = preManager[method](plugin);
         });
         it("does nothing as result", async () => {
@@ -213,9 +213,9 @@ describe("vimhelp", () => {
         });
       });
 
-      context("with updates", () => {
+      describe("with updates", () => {
         let manager: PluginManager, promise: Promise<UpdateInfo>, plugin: string;
-        before(async () => {
+        beforeAll(async () => {
           manager = newManager();
           const plug = await contextUpdateExists(manager);
           plugin = plug;
@@ -230,7 +230,7 @@ describe("vimhelp", () => {
         });
       });
 
-      context("with no exist path", () => {
+      describe("with no exist path", () => {
         it("is fail", async () => {
           try {
             await preManager[method]("not-installed-plugin");
@@ -259,9 +259,9 @@ describe("vimhelp", () => {
         tags = unlinkTags(pluginPath);
       });
 
-      context("with no arguments", () => {
-        context("with no updates", () => {
-          before(() => {
+      describe("with no arguments", () => {
+        describe("with no updates", () => {
+          beforeAll(() => {
             promise = preManager.updateAll();
           });
           it("does nothing as result", async () => {
@@ -280,9 +280,9 @@ describe("vimhelp", () => {
           });
         });
 
-        context("with updates", () => {
+        describe("with updates", () => {
           let updatedPlugin: string;
-          before(async () => {
+          beforeAll(async () => {
             updatedPlugin = await contextUpdateExists(preManager);
             promise = preManager.updateAll();
           });
@@ -305,10 +305,10 @@ describe("vimhelp", () => {
         });
       });
 
-      context("with plugin list as arguments", () => {
+      describe("with plugin list as arguments", () => {
         let plugins: string[];
-        context("with no updates", () => {
-          before(() => {
+        describe("with no updates", () => {
+          beforeAll(() => {
             plugins = [plugin];
             promise = preManager.updateAll(plugins);
           });
@@ -328,15 +328,15 @@ describe("vimhelp", () => {
           });
         });
 
-        context("with updates", () => {
+        describe("with updates", () => {
           let updatedPlugin: string;
 
-          before(async () => {
+          beforeAll(async () => {
             updatedPlugin = await contextUpdateExists(preManager);
           });
 
-          context("when argument does not contain updateing plugin", () => {
-            before(async () => {
+          describe("when argument does not contain updateing plugin", () => {
+            beforeAll(async () => {
               plugins = [plugin];
               promise = preManager.updateAll(plugins);
             });
@@ -356,8 +356,8 @@ describe("vimhelp", () => {
             });
           });
 
-          context("when argument does not contain updateing plugin", () => {
-            before(async () => {
+          describe("when argument does not contain updateing plugin", () => {
+            beforeAll(async () => {
               plugins = [updatedPlugin];
               promise = preManager.updateAll(plugins);
             });
@@ -374,8 +374,8 @@ describe("vimhelp", () => {
           });
         });
 
-        context("with empty array", () => {
-          before(() => {
+        describe("with empty array", () => {
+          beforeAll(() => {
             promise = preManager.updateAll([]);
           });
           it("returns empty result", async () => {
@@ -400,19 +400,19 @@ describe("vimhelp", () => {
     });
 
     describe(".nameToRepository()", () => {
-      context("simple name", () => {
+      describe("simple name", () => {
         it("is treated as vim-scripts's plugin", () => {
           expect(preManager.nameToRepository("foo")).to.eql("https://github.com/vim-scripts/foo");
         });
       });
 
-      context("username/repos form", () => {
+      describe("username/repos form", () => {
         it("is treated as Github's plugin", () => {
           expect(preManager.nameToRepository("user/repos")).to.eql("https://github.com/user/repos");
         });
       });
 
-      context("full URL", () => {
+      describe("full URL", () => {
         it("returns directly", () => {
           expect(preManager.nameToRepository("https://github.com/user/repos")).to.eql("https://github.com/user/repos");
         });
@@ -426,25 +426,25 @@ describe("vimhelp", () => {
         expect(preManager.repositoryToDirname(repos)).to.eql(expectValue);
       };
       const testDotGitCase = () => {
-        context("when repository has .git suffix", () => {
+        describe("when repository has .git suffix", () => {
           beforeEach(() => { repos += ".git"; });
           it("is removed", sample);
         });
       };
 
-      context("when repository is http/https", () => {
+      describe("when repository is http/https", () => {
         beforeEach(() => { repos = "https://github.com/user/repos"; });
         it("returns path", sample);
         testDotGitCase();
       });
 
-      context("when repository is git://", () => {
+      describe("when repository is git://", () => {
         beforeEach(() => { repos = "git://github.com/user/repos"; });
         it("returns path", sample);
         testDotGitCase();
       });
 
-      context("when repository is ssh", () => {
+      describe("when repository is ssh", () => {
         beforeEach(() => { repos = "git@github.com:user/repos"; });
         it("returns path", sample);
         testDotGitCase();
@@ -459,17 +459,17 @@ describe("vimhelp", () => {
     });
 
     describe(".dirnameToName()", () => {
-      context("vim-scripts plugin", () => {
+      describe("vim-scripts plugin", () => {
         it("converts dirname to plugin name", () => {
           expect(preManager.dirnameToName("github.com__vim-scripts__foo")).to.eql("foo");
         });
       });
-      context("github.com plugin", () => {
+      describe("github.com plugin", () => {
         it("converts dirname to plugin name", () => {
           expect(preManager.dirnameToName("github.com__user__foo")).to.eql("user/foo");
         });
       });
-      context("other plugin", () => {
+      describe("other plugin", () => {
         it("does not restore the full URL", () => {
           expect(preManager.dirnameToName("example.com__user__foo")).to.eql("example.com/user/foo");
         });
