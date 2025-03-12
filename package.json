@@ -32,6 +32,7 @@
   ],
   "license": "Zlib",
   "main": "./lib/index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/thinca/node-vimhelp.git"
