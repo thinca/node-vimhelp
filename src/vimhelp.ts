@@ -1,4 +1,4 @@
-import {execVim} from "./exec_vim";
+import {execVim} from "./exec_vim.js";
 
 export type RTPProvider = () => string[];
 

@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./lib",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "lib": ["ES2023"],
+    "module": "node16",
+    "target": "ES2023",
+    "moduleResolution": "nodenext",
     "strict": true,
     "declaration": true,
     "preserveConstEnums": true,
@@ -13,7 +15,6 @@
     "noUnusedParameters": true,
     "noEmitOnError": true,
     "strictNullChecks": true,
-    "target": "es2019",
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
