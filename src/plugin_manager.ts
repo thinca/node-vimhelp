@@ -3,7 +3,7 @@ import fs from "fs";
 import fsp from "fs/promises";
 import {join as pathJoin} from "path";
 
-import {RTPProvider} from "./vimhelp.js";
+import {type RTPProvider} from "./vimhelp.js";
 import {execVim, ExecError} from "./exec_vim.js";
 
 function execGit(args: string[], options = {}): Promise<string> {
