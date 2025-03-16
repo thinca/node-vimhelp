@@ -12,7 +12,6 @@ export default defineConfig({
     {
       format: "cjs",
       bundle: false,
-      dts: true,
       output: {
         filename: {
           js: "[name].cjs",
