@@ -32,7 +32,7 @@
     "vim"
   ],
   "license": "Zlib",
-  "main": "./lib/index.js",
+  "main": "./lib/index.cjs",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
