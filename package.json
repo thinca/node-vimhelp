@@ -7,6 +7,7 @@
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
   "devDependencies": {
+    "@rslib/core": "^0.5.4",
     "@types/node": "^22.13.10",
     "@types/temp": "^0.9.4",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
@@ -14,7 +15,6 @@
     "@vitest/coverage-istanbul": "^3.0.8",
     "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
-    "mkdist": "^2.2.0",
     "temp": "^0.9.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
@@ -25,7 +25,7 @@
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./lib/index.js",
+      "import": "./lib/index.mjs",
       "require": "./lib/index.cjs"
     }
   },
@@ -40,15 +40,13 @@
   ],
   "license": "Zlib",
   "main": "./lib/index.cjs",
-  "overrides": {
-    "esbuild": "^0.25.0"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "build": "mkdist --src=src --dist=lib --format=cjs --ext=cjs --no-clean && mkdist --src=src --dist=lib --format=esm --ext=js --declaration --no-clean",
+    "build": "rslib build",
+    "watch": "rslib build --watch",
     "clean": "rm -fr coverage lib",
     "lint": "eslint src test",
     "test": "vitest run --config vitest.config.ts",
