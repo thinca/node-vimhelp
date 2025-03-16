@@ -14,6 +14,7 @@
     "@vitest/coverage-istanbul": "^3.0.8",
     "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
+    "mkdist": "^2.2.0",
     "temp": "^0.9.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
@@ -32,17 +33,27 @@
   ],
   "license": "Zlib",
   "main": "./lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
   "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "mkdist --src=src --dist=lib --format=cjs --ext=cjs --no-clean && mkdist --src=src --dist=lib --format=esm --ext=js --declaration --no-clean",
     "clean": "rm -fr coverage lib",
     "lint": "eslint src test",
     "test": "vitest run --config vitest.config.ts",
     "version": "sed -i -e \"s/^## Unreleased$/## v$(jq -r .version package.json) ($(date '+%Y-%m-%d'))/\" CHANGELOG.md && git add CHANGELOG.md"
+  },
+  "overrides": {
+    "esbuild": "^0.25.0"
   },
   "types": "./lib/index.d.ts"
 }

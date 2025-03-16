@@ -1,12 +1,12 @@
 export {
   VimHelp,
   type RTPProvider,
-} from "./vimhelp.js";
+} from "./vimhelp";
 export {
   PluginManager,
   type PluginInfo,
   type UpdateInfo,
-} from "./plugin_manager.js";
+} from "./plugin_manager";
 export {
   ExecError,
-} from "./exec_vim.js";
+} from "./exec_vim";
