@@ -128,7 +128,7 @@ export class PluginManager {
     return updateInfo;
   }
 
-  async updateAll(pluginNames = this.pluginNames): Promise<UpdateInfo[]> {
+  async updateAll(pluginNames: string[] = this.pluginNames): Promise<UpdateInfo[]> {
     const updateInfos = await Promise.all(
       pluginNames.map(this.updatePlugin.bind(this))
     );
