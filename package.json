@@ -22,6 +22,13 @@
   "engines": {
     "node": ">=22.0.0"
   },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
   "files": [
     "lib"
   ],
@@ -33,14 +40,9 @@
   ],
   "license": "Zlib",
   "main": "./lib/index.cjs",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/index.js",
-      "require": "./lib/index.cjs"
-    }
+  "overrides": {
+    "esbuild": "^0.25.0"
   },
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/thinca/node-vimhelp.git"
@@ -52,8 +54,6 @@
     "test": "vitest run --config vitest.config.ts",
     "version": "sed -i -e \"s/^## Unreleased$/## v$(jq -r .version package.json) ($(date '+%Y-%m-%d'))/\" CHANGELOG.md && git add CHANGELOG.md"
   },
-  "overrides": {
-    "esbuild": "^0.25.0"
-  },
+  "type": "module",
   "types": "./lib/index.d.ts"
 }
