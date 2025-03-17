@@ -2,13 +2,13 @@
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "bundler",
-    "target": "ESNext",
+    "target": "esnext",
     "strict": true,
     "noEmit": true,
     "declaration": true,
     "isolatedDeclarations": true,
     "isolatedModules": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "include": ["src"]
 }
