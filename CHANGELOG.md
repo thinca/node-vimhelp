@@ -4,6 +4,7 @@
 
 - Breaking: Drop Node.js v20 and older support.
 - Replace test library from mocha to vitest.
+- Export as ecma module too.
 
 
 ## v4.1.0 (2022-07-10)

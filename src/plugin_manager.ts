@@ -3,7 +3,7 @@ import fs from "fs";
 import fsp from "fs/promises";
 import {join as pathJoin} from "path";
 
-import {RTPProvider} from "./vimhelp";
+import {type RTPProvider} from "./vimhelp";
 import {execVim, ExecError} from "./exec_vim";
 
 function execGit(args: string[], options = {}): Promise<string> {
@@ -128,7 +128,7 @@ export class PluginManager {
     return updateInfo;
   }
 
-  async updateAll(pluginNames = this.pluginNames): Promise<UpdateInfo[]> {
+  async updateAll(pluginNames: string[] = this.pluginNames): Promise<UpdateInfo[]> {
     const updateInfos = await Promise.all(
       pluginNames.map(this.updatePlugin.bind(this))
     );

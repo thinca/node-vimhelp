@@ -1,23 +1,14 @@
 {
   "compilerOptions": {
-    "outDir": "./lib",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
     "strict": true,
+    "noEmit": true,
     "declaration": true,
-    "preserveConstEnums": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noEmitOnError": true,
-    "strictNullChecks": true,
-    "target": "es2019",
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    "isolatedDeclarations": true,
+    "isolatedModules": true,
+    "esModuleInterop": true
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src"]
 }
