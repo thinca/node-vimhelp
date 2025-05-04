@@ -110,9 +110,9 @@ describe("vimhelp", () => {
         it("installs a plugin", async () => {
           const path = manager.nameToPath(plugin);
           await promise;
-          expect(fs.existsSync(path)).to.be.ok;
+          expect(fs.existsSync(path)).toBe(true);
           const tags = pathJoin(path, "doc", "tags");
-          expect(fs.existsSync(tags)).to.be.ok;
+          expect(fs.existsSync(tags)).toBe(true);
         });
         it("returns version hash", async () => {
           const version = await promise;
@@ -151,10 +151,10 @@ describe("vimhelp", () => {
         const manager = newManager();
         const path = manager.nameToPath(plugin);
         const version = await manager.install(plugin);
-        expect(fs.existsSync(path)).to.be.ok;
+        expect(fs.existsSync(path)).toBe(true);
         expect(version).to.match(/^[0-9a-f]{40}$/);
         const afterPath = await manager.uninstall(plugin);
-        expect(fs.existsSync(afterPath)).to.not.be.ok;
+        expect(fs.existsSync(afterPath)).toBe(false);
       });
 
       describe("with not installed plugin", () => {
@@ -180,9 +180,9 @@ describe("vimhelp", () => {
         return manager.install(plugin);
       });
       it("uninstalls plugins", async () => {
-        expect(manager.dirNames).to.not.be.empty;
+        expect(manager.dirNames.length).toBeGreaterThan(0);
         await manager.clean();
-        expect(manager.dirNames).to.be.empty;
+        expect(manager.dirNames).toHaveLength(0);
       });
     });
 
@@ -201,15 +201,15 @@ describe("vimhelp", () => {
         });
         it("does nothing as result", async () => {
           await promise;
-          expect(fs.existsSync(pluginPath)).to.be.true;
-          expect(fs.existsSync(tags)).to.be.false;
+          expect(fs.existsSync(pluginPath)).toBe(true);
+          expect(fs.existsSync(tags)).toBe(false);
         });
         it("returns update info object with Promise", async () => {
           const updateInfo = await promise;
           expect(updateInfo.pluginName).to.eql(plugin);
           expect(updateInfo.pluginPath).to.eql(pluginPath);
           expect(updateInfo.beforeVersion).to.eql(updateInfo.afterVersion);
-          expect(updateInfo.updated()).to.be.false;
+          expect(updateInfo.updated()).toBe(false);
         });
       });
 
@@ -226,7 +226,7 @@ describe("vimhelp", () => {
           expect(updateInfo.pluginName).to.eql(plugin);
           expect(updateInfo.pluginPath).to.eql(manager.nameToPath(plugin));
           expect(updateInfo.beforeVersion).to.not.eql(updateInfo.afterVersion);
-          expect(updateInfo.updated()).to.be.true;
+          expect(updateInfo.updated()).toBe(true);
         });
       });
 
@@ -266,8 +266,8 @@ describe("vimhelp", () => {
           });
           it("does nothing as result", async () => {
             await promise;
-            expect(fs.existsSync(pluginPath)).to.be.true;
-            expect(fs.existsSync(tags)).to.be.false;
+            expect(fs.existsSync(pluginPath)).toBe(true);
+            expect(fs.existsSync(tags)).toBe(false);
           });
           it("returns updateInfos", async () => {
             const updateInfos = await promise;
@@ -276,7 +276,7 @@ describe("vimhelp", () => {
             expect(info.pluginName).to.eql(plugin);
             expect(info.pluginPath).to.eql(pluginPath);
             expect(info.beforeVersion).to.eql(info.afterVersion);
-            expect(info.updated()).to.be.false;
+            expect(info.updated()).toBe(false);
           });
         });
 
@@ -295,12 +295,12 @@ describe("vimhelp", () => {
             expect(notUpdatedInfo.pluginName).to.eql(plugin);
             expect(notUpdatedInfo.pluginPath).to.eql(pluginPath);
             expect(notUpdatedInfo.beforeVersion).to.eql(notUpdatedInfo.afterVersion);
-            expect(notUpdatedInfo.updated()).to.be.false;
+            expect(notUpdatedInfo.updated()).toBe(false);
 
             expect(updatedInfo.pluginName).to.eql(updatedPlugin);
             expect(updatedInfo.pluginPath).to.eql(preManager.nameToPath(updatedPlugin));
             expect(updatedInfo.beforeVersion).to.not.eql(updatedInfo.afterVersion);
-            expect(updatedInfo.updated()).to.be.true;
+            expect(updatedInfo.updated()).toBe(true);
           });
         });
       });
@@ -314,8 +314,8 @@ describe("vimhelp", () => {
           });
           it("does nothing as result", async () => {
             await promise;
-            expect(fs.existsSync(pluginPath)).to.be.true;
-            expect(fs.existsSync(tags)).to.be.false;
+            expect(fs.existsSync(pluginPath)).toBe(true);
+            expect(fs.existsSync(tags)).toBe(false);
           });
           it("returns updateInfos", async () => {
             const updateInfos = await promise;
@@ -324,7 +324,7 @@ describe("vimhelp", () => {
             expect(info.pluginName).to.eql(plugin);
             expect(info.pluginPath).to.eql(pluginPath);
             expect(info.beforeVersion).to.eql(info.afterVersion);
-            expect(info.updated()).to.be.false;
+            expect(info.updated()).toBe(false);
           });
         });
 
@@ -342,8 +342,8 @@ describe("vimhelp", () => {
             });
             it("does nothing as result", async () => {
               await promise;
-              expect(fs.existsSync(pluginPath)).to.be.true;
-              expect(fs.existsSync(tags)).to.be.false;
+              expect(fs.existsSync(pluginPath)).toBe(true);
+              expect(fs.existsSync(tags)).toBe(false);
             });
             it("returns updateInfos", async () => {
               const updateInfos = await promise;
@@ -352,7 +352,7 @@ describe("vimhelp", () => {
               expect(info.pluginName).to.eql(plugin);
               expect(info.pluginPath).to.eql(pluginPath);
               expect(info.beforeVersion).to.eql(info.afterVersion);
-              expect(info.updated()).to.be.false;
+              expect(info.updated()).toBe(false);
             });
           });
 
@@ -369,7 +369,7 @@ describe("vimhelp", () => {
               expect(info.pluginName).to.eql(updatedPlugin);
               expect(info.pluginPath).to.eql(preManager.nameToPath(updatedPlugin));
               expect(info.beforeVersion).to.not.eql(info.afterVersion);
-              expect(info.updated()).to.be.true;
+              expect(info.updated()).toBe(true);
             });
           });
         });
@@ -380,7 +380,7 @@ describe("vimhelp", () => {
           });
           it("returns empty result", async () => {
             const updateInfos = await promise;
-            expect(updateInfos).to.be.empty;
+            expect(updateInfos).toHaveLength(0);
           });
         });
       });
@@ -390,12 +390,12 @@ describe("vimhelp", () => {
       it("updates helptags", async () => {
         const pluginPath = preManager.nameToPath(plugin);
         const tags = unlinkTags(pluginPath);
-        expect(fs.existsSync(tags)).to.be.false;
+        expect(fs.existsSync(tags)).toBe(false);
         const paths = await preManager.updateTags([pluginPath]);
         expect(paths).to.be.an("array");
         expect(paths[0]).to.eql(pluginPath);
         expect(paths).to.eql([pluginPath]);
-        expect(fs.existsSync(tags)).to.be.true;
+        expect(fs.existsSync(tags)).toBe(true);
       });
     });
 
