@@ -10,13 +10,12 @@
     "@rslib/core": "^0.5.4",
     "@types/node": "^22.13.10",
     "@types/temp": "^0.9.4",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "@typescript-eslint/parser": "^8.31.1",
     "@vitest/coverage-istanbul": "^3.0.8",
     "eslint": "^9.26.0",
     "eslint-plugin-import": "^2.31.0",
     "temp": "^0.9.4",
     "typescript": "^5.8.2",
+    "typescript-eslint": "^8.31.1",
     "vitest": "^3.0.8"
   },
   "engines": {
