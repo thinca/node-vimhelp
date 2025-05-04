@@ -1,54 +1,35 @@
-import { defineConfig } from "eslint/config";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
+// @ts-check
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
+export default tseslint.config(
+  eslint.configs.recommended,
+  tseslint.configs.eslintRecommended,
+  tseslint.configs.recommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        Atomics: "readonly",
+        SharedArrayBuffer: "readonly",
+      },
 
-export default defineConfig([{
-  extends: compat.extends(
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-  ),
-
-  plugins: {
-    "@typescript-eslint": typescriptEslint,
-  },
-
-  languageOptions: {
-    globals: {
-      ...globals.node,
-      Atomics: "readonly",
-      SharedArrayBuffer: "readonly",
+      ecmaVersion: 2018,
+      sourceType: "module",
     },
+    rules: {
+      indent: ["error", 2, {
+        SwitchCase: 1,
+      }],
 
-    parser: tsParser,
-    ecmaVersion: 2018,
-    sourceType: "module",
-  },
+      "linebreak-style": ["error", "unix"],
+      quotes: ["error", "double"],
+      semi: ["error", "always"],
 
-  rules: {
-    indent: ["error", 2, {
-      SwitchCase: 1,
-    }],
-
-    "linebreak-style": ["error", "unix"],
-    quotes: ["error", "double"],
-    semi: ["error", "always"],
-
-    "@typescript-eslint/no-unused-vars": ["error", {
-      argsIgnorePattern: "^_",
-    }],
-  },
-}]);
+      "@typescript-eslint/no-unused-vars": ["error", {
+        argsIgnorePattern: "^_",
+      }],
+    },
+  }
+);
