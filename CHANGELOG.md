@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Fix supported node version
+- Fix supported node version.
+- Update dependencies of GitHub Actions.
 
 
 ## v5.0.0 (2025-05-05)
