@@ -14,17 +14,17 @@ jobs:
     runs-on: 'ubuntu-latest'
 
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
       - name: 'Setup Node.js'
-        uses: 'actions/setup-node@v3'
+        uses: 'actions/setup-node@v4'
         with:
           node-version: 'lts/*'
           cache: 'npm'
-      - uses: 'bahmutov/npm-install@v1'
+      - run: 'npm ci'
       - name: 'Prepare for publishing a new npm package'
         run: |
           npm run --silent build
       - name: 'Publish a new npm package'
-        uses: 'JS-DevTools/npm-publish@v1'
+        uses: 'JS-DevTools/npm-publish@v3'
         with:
           token: ${{ secrets.NPM_TOKEN }}
