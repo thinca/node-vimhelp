@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Fix supported node version
+
+
 ## v5.0.0 (2025-05-05)
 
 - Breaking: Drop Node.js v20 and older support.
