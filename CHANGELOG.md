@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v5.0.1 (2025-05-05)
 
 - Fix supported node version.
 - Update dependencies of GitHub Actions.
