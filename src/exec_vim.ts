@@ -1,4 +1,4 @@
-import {execFile} from "child_process";
+import {execFile} from "node:child_process";
 
 export class ExecError extends Error {
   exitCode?: number;

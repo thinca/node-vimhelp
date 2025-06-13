@@ -1,7 +1,7 @@
-import {execFile} from "child_process";
-import fs from "fs";
-import fsp from "fs/promises";
-import {join as pathJoin} from "path";
+import {execFile} from "node:child_process";
+import fs from "node:fs";
+import fsp from "node:fs/promises";
+import {join as pathJoin} from "node:path";
 
 import {type RTPProvider} from "./vimhelp";
 import {execVim, ExecError} from "./exec_vim";
