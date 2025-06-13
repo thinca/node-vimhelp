@@ -7,15 +7,17 @@
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
   "devDependencies": {
-    "@rslib/core": "^0.5.4",
     "@types/node": "^22.13.10",
     "@types/temp": "^0.9.4",
     "@vitest/coverage-istanbul": "^3.0.8",
     "eslint": "^9.26.0",
     "eslint-plugin-import": "^2.31.0",
+    "publint": "^0.3.12",
     "temp": "^0.9.4",
+    "tsdown": "^0.12.7",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.31.1",
+    "unplugin-unused": "^0.5.1",
     "vitest": "^3.0.8"
   },
   "engines": {
@@ -23,13 +25,19 @@
   },
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.cjs"
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./lib/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.cts",
+        "default": "./lib/index.cjs"
+      }
     }
   },
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "homepage": "https://github.com/thinca/node-vimhelp",
   "keywords": [
@@ -38,19 +46,19 @@
     "vim"
   ],
   "license": "Zlib",
-  "main": "./lib/index.cjs",
+  "main": "./lib/index.mjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "build": "rslib build",
-    "watch": "rslib build --watch",
+    "build": "tsdown",
+    "watch": "tsdown --watch",
     "clean": "rm -fr coverage lib",
     "lint": "eslint src test",
     "test": "vitest run --config vitest.config.ts",
     "version": "sed -i -e \"s/^## Unreleased$/## v$(jq -r .version package.json) ($(date '+%Y-%m-%d'))/\" CHANGELOG.md && git add CHANGELOG.md"
   },
   "type": "module",
-  "types": "./lib/index.d.ts"
+  "types": "./lib/index.d.mts"
 }
