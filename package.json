@@ -7,7 +7,6 @@
     "url": "https://github.com/thinca/node-vimhelp/issues"
   },
   "devDependencies": {
-    "@rslib/core": "^0.5.4",
     "@types/node": "^22.13.10",
     "@types/temp": "^0.9.4",
     "@vitest/coverage-istanbul": "^3.0.8",
@@ -44,8 +43,6 @@
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "build": "rslib build",
-    "watch": "rslib build --watch",
     "clean": "rm -fr coverage lib",
     "lint": "eslint src test",
     "test": "vitest run --config vitest.config.ts",
