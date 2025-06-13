@@ -36,7 +36,8 @@
     }
   },
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "homepage": "https://github.com/thinca/node-vimhelp",
   "keywords": [
