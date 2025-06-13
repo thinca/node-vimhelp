@@ -51,7 +51,7 @@
     "url": "https://github.com/thinca/node-vimhelp.git"
   },
   "scripts": {
-    "build": "tsdown --format esm --format cjs --out-dir lib --dts --sourcemap --fixed-extension --unbundle --publint --unused ",
+    "build": "tsdown",
     "watch": "tsdown --watch",
     "clean": "rm -fr coverage lib",
     "lint": "eslint src test",
